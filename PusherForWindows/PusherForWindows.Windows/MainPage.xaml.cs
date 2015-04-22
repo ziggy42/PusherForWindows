@@ -1,25 +1,12 @@
 ﻿using PusherForWindows.Pusher;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Data.Xml.Dom;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Networking.Connectivity;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
-using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 namespace PusherForWindows
 {
@@ -87,49 +74,6 @@ namespace PusherForWindows
             }
         }
 
-        private async void SendSimplePushButton_Click(object sender, RoutedEventArgs e)
-        {
-            string message = SimplePushTextBox.Text;
-
-            if (message.Length > 0)
-            {
-                if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
-                    == NetworkConnectivityLevel.InternetAccess)
-                {
-                    if (await PusherUtils.PushNoteAsync(message))
-                    {
-                        SimplePushTextBox.Text = "";
-
-                        ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
-                        XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
-
-                        XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-                        toastTextElements[0].AppendChild(toastXml.CreateTextNode("Push Sent!"));
-                        toastTextElements[1].AppendChild(toastXml.CreateTextNode(message));
-
-                        ToastNotification toast = new ToastNotification(toastXml);
-                        toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(5);
-
-                        ToastNotificationManager.CreateToastNotifier().Show(toast);
-                    }
-                    else
-                    {
-                        var messageDialog = new Windows.UI.Popups.MessageDialog(
-                            "Something wrong happened here but I don't know anything more...");
-                        messageDialog.DefaultCommandIndex = 1;
-                        await messageDialog.ShowAsync();
-                    }
-                }
-                else
-                {
-                    var messageDialog = new Windows.UI.Popups.MessageDialog(
-                        "Seems that internet is not available. Check your connection!");
-                    messageDialog.DefaultCommandIndex = 1;
-                    await messageDialog.ShowAsync();
-                }
-            }
-        }
-
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (!PusherUtils.IsUserLoggedIn())
@@ -141,6 +85,12 @@ namespace PusherForWindows
                 System.Diagnostics.Debug.WriteLine("I'm in");
                 SetupAsync();
             }
+        }
+
+        private void PushButton_Click(object sender, RoutedEventArgs e)
+        {
+            var flyout = new NewPushFlyout {  };
+            flyout.ShowIndependent();
         }
     }
 }
