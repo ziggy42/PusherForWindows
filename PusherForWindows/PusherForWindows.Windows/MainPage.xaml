@@ -1,0 +1,49 @@
+﻿<Page
+    x:Class="PusherForWindows.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PusherForWindows"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#37474F">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="300" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Image  Name="UserProfileImage" Source="Assets/MediumGray.png" Margin="40, 40, 40, 0" Grid.Row="0" VerticalAlignment="Top"/>
+            <TextBlock Name="UserNameTextBlock" FontSize="28" Margin="0, 10, 0, 0" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center"/>
+
+            <TextBlock FontSize="24" Margin="0,20,0,0" HorizontalAlignment="Center" TextAlignment="Center" Text="Simple Note Push" Grid.Row="2"/>
+            <TextBox 
+                Grid.Row="3"
+                Name="SimplePushTextBox"  
+                HorizontalAlignment="Stretch"
+                Margin="10,10,10,0" 
+                TextWrapping="Wrap" />            
+
+            <Button 
+                Grid.Row="4"
+                Name="SendSimplePushButton" 
+                HorizontalAlignment="Stretch"
+                Margin="10,20,10,20" 
+                Click="SendSimplePushButton_Click">Send Note</Button>
+        </Grid>
+
+        <Grid Grid.Column="1" Background="#DCDCDC">
+
+        </Grid>
+    </Grid>
+</Page>
