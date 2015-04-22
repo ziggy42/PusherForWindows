@@ -124,7 +124,6 @@ namespace PusherForWindows.Pusher
                             pushes.Add(new PushFile(
                                  (string)push.iden, Push.TYPES.LINK, (string)push.title, (long)push.created, (long)push.modified,
                                  (string)push.file_name, (string)push.file_type, (string)push.file_url));
-
                             break;
                     }
                 }
