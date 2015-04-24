@@ -8,6 +8,24 @@
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
+    <Page.Resources>
+        <DataTemplate x:Key="pushTemplate">
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="1" Background="White">
+
+                    <TextBlock Foreground="Black" Text="{Binding Title}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,28 +42,29 @@
             <TextBlock Name="UserNameTextBlock" FontSize="24" Margin="0, 10, 0, 0" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center"/>
         </Grid>
 
-        <Grid Grid.Column="1" Background="#DCDCDC">
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            
-            <ListView Grid.Column="1"> 
-                
-                
-            </ListView>
-            
-            <Button 
+        <ListView Name="PushesListView" 
+                  Grid.Column="1" 
+                  Background="#DCDCDC"
+                  IsItemClickEnabled="True"
+                  ItemTemplate="{StaticResource pushTemplate}"  
+                  ItemsSource="{Binding Items}"
+                  ItemClick="PushesListView_ItemClick">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
+        </ListView>
+
+        <Button 
                 Name="PushButton" 
                 Click="PushButton_Click" 
                 Content="+" 
-                Grid.Column="2"
+                Grid.Column="1"
                 HorizontalAlignment="Right" 
                 Margin="0,0,40,40" 
                 VerticalAlignment="Bottom"/>
 
-        </Grid>
     </Grid>
 </Page>

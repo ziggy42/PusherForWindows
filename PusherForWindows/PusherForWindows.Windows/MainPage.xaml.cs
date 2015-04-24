@@ -1,4 +1,5 @@
-﻿using PusherForWindows.Pusher;
+﻿using PusherForWindows.Model;
+using PusherForWindows.Pusher;
 using System;
 using System.Collections.Generic;
 using Windows.Security.Authentication.Web;
@@ -13,9 +14,13 @@ namespace PusherForWindows
 
     public sealed partial class MainPage : Page
     {
+        private PushDataSource pushDataSource = new PushDataSource();
+
         public MainPage()
         {
             this.InitializeComponent();
+            PushesListView.DataContext = pushDataSource;
+            System.Diagnostics.Debug.WriteLine(pushDataSource.Items);
         }
 
         private async void CreateLoginDialogAsync()
@@ -59,6 +64,7 @@ namespace PusherForWindows
 
         private async void SetupAsync()
         {
+            pushDataSource.Populate();
             if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
             {
                 UserNameTextBlock.Text = (string)
@@ -89,8 +95,13 @@ namespace PusherForWindows
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
         {
-            var flyout = new NewPushFlyout {  };
+            var flyout = new NewPushFlyout { };
             flyout.ShowIndependent();
+        }
+
+        private void PushesListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            //TODO do something
         }
     }
 }

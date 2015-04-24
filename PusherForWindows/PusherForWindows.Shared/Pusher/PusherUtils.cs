@@ -2,6 +2,7 @@
 using PusherForWindows.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -93,7 +94,7 @@ namespace PusherForWindows.Pusher
             return devicesList;
         }
 
-        public async static void GetNotesListAsync()
+        public async static Task<ObservableCollection<Push>> GetNotesListAsync()
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -102,7 +103,7 @@ namespace PusherForWindows.Pusher
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic json = JsonConvert.DeserializeObject(responseString);
 
-            List<Push> pushes = new List<Push>();
+            var pushes = new ObservableCollection<Push>();
             foreach (dynamic push in json["pushes"])
             {
                 if ((bool)push.active)
@@ -128,6 +129,7 @@ namespace PusherForWindows.Pusher
                 }
             }
 
+            return pushes;
         }
     }
 }

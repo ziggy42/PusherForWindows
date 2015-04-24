@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace PusherForWindows.Model
 {
     class Push
@@ -22,6 +21,18 @@ namespace PusherForWindows.Model
             this.Created = Created;
             this.Modified = Modified;
             this.Type = Type;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Push))
+                return false;
+            return this.Iden.Equals(((Push)obj).Iden);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Iden.GetHashCode();
         }
     }
 }
