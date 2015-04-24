@@ -19,8 +19,16 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="1" Background="White">
-
-                    <TextBlock Foreground="Black" Text="{Binding Title}"/>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0"/>
+                    <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 5, 15, 10" FontSize="18" Grid.Row="1"/>
+                    <TextBlock Foreground="Black" Text="{Binding URL}" Margin="15, 5, 15, 10" FontSize="18" Grid.Row="1"/>
+                    <Image Source="{Binding FileUrl}" Grid.Row="1"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -49,6 +57,11 @@
                   ItemTemplate="{StaticResource pushTemplate}"  
                   ItemsSource="{Binding Items}"
                   ItemClick="PushesListView_ItemClick">
+
+            <ListView.Header >
+                <StackPanel Height="60"/>
+            </ListView.Header>
+
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
