@@ -20,7 +20,6 @@ namespace PusherForWindows
         {
             this.InitializeComponent();
             PushesListView.DataContext = pushDataSource;
-            System.Diagnostics.Debug.WriteLine(pushDataSource.Items);
         }
 
         private async void CreateLoginDialogAsync()

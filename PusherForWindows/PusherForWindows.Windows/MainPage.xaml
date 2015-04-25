@@ -68,14 +68,15 @@
             <TextBlock Name="UserNameTextBlock" FontSize="24" Margin="0, 10, 0, 0" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center"/>
         </Grid>
 
-        <ListView Name="PushesListView" 
-                  Grid.Column="1" 
-                  Background="#DCDCDC"
-                  SelectionMode="None"
-                  IsItemClickEnabled="True"
-                  ItemTemplateSelector="{StaticResource PushTemplateSelector}"
-                  ItemsSource="{Binding Items}"
-                  ItemClick="PushesListView_ItemClick">
+        <ListView 
+            Name="PushesListView" 
+            Grid.Column="1" 
+            Background="#DCDCDC"
+            SelectionMode="None"
+            IsItemClickEnabled="True"
+            ItemTemplateSelector="{StaticResource PushTemplateSelector}"
+            ItemsSource="{Binding Items}"
+            ItemClick="PushesListView_ItemClick">
 
             <ListView.Header >
                 <StackPanel Height="60"/>
@@ -91,13 +92,13 @@
         </ListView>
 
         <Button 
-                Name="PushButton" 
-                Click="PushButton_Click" 
-                Content="+" 
-                Grid.Column="1"
-                HorizontalAlignment="Right" 
-                Margin="0,0,40,40" 
-                VerticalAlignment="Bottom"/>
+            Name="PushButton" 
+            Click="PushButton_Click" 
+            Content="+" 
+            Grid.Column="1"
+            HorizontalAlignment="Right" 
+            Margin="0,0,40,40" 
+            VerticalAlignment="Bottom"/>
 
     </Grid>
 </Page>

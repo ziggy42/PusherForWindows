@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PusherForWindows.Model
 {
@@ -8,8 +6,8 @@ namespace PusherForWindows.Model
     {
         public Uri URL { get; set; }
 
-        public PushLink(string Iden, TYPES Type, string Title, long Created, long Modified, string url)
-            : base(Iden, Type, Title, Created, Modified)
+        public PushLink(string Iden, string Title, long Created, long Modified, string url)
+            : base(Iden, Title, Created, Modified)
         {
             this.URL = new Uri(url);
         }

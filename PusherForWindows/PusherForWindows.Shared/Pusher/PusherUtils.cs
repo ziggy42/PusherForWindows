@@ -112,17 +112,17 @@ namespace PusherForWindows.Pusher
                     {
                         case "note":
                             pushes.Add(new PushNote(
-                                (string)push.iden, Push.TYPES.NOTE, (string)push.title, (long)push.created, (long)push.modified,
+                                (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                                 (string)push.body));
                             break;
                         case "link":
                             pushes.Add(new PushLink(
-                                (string)push.iden, Push.TYPES.LINK, (string)push.title, (long)push.created, (long)push.modified,
+                                (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                                 (string)push.url));
                             break;
                         case "file":
                             pushes.Add(new PushFile(
-                                 (string)push.iden, Push.TYPES.LINK, (string)push.title, (long)push.created, (long)push.modified,
+                                 (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                                  (string)push.file_name, (string)push.file_type, (string)push.file_url));
                             break;
                     }
