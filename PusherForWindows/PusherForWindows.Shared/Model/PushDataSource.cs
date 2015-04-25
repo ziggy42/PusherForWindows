@@ -34,7 +34,6 @@ namespace PusherForWindows.Model
             {
                 this.pushes.Add(p);
             }
-            System.Diagnostics.Debug.WriteLine("Finito");
         }
     }
 }

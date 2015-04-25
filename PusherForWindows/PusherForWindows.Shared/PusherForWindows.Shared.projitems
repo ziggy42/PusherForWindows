@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushLink.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushNote.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PushTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\PusherUtils.cs" />
   </ItemGroup>
 </Project>
