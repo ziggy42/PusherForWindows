@@ -11,66 +11,36 @@
 
     <Page.Resources>
         <DataTemplate x:Key="pushNoteTemplate">
-            <Grid>
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="1" Background="White">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0"/>
-                    <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 5, 15, 10" FontSize="18" Grid.Row="1"/>
-                </Grid>
+                <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0" TextWrapping="Wrap"/>
+                <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 5, 15, 10" FontSize="18" Grid.Row="1" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="pushLinkTemplate">
-            <Grid>
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="1" Background="White">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0"/>
-                    <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1"/>
-                </Grid>
+                <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0" TextWrapping="Wrap"/>
+                <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="pushFileTemplate">
-            <Grid>
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="1" Background="White">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0"/>
-                    <Image  Margin="15, 5, 15, 10" Source="{Binding URL}" Grid.Row="1"/>
-                </Grid>
+                <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 15, 15, 0" FontSize="22" Grid.Row="0" TextWrapping="Wrap"/>
+                <Image Source="{Binding URL}" Grid.Row="1"/>
             </Grid>
         </DataTemplate>
 
@@ -101,6 +71,7 @@
         <ListView Name="PushesListView" 
                   Grid.Column="1" 
                   Background="#DCDCDC"
+                  SelectionMode="None"
                   IsItemClickEnabled="True"
                   ItemTemplateSelector="{StaticResource PushTemplateSelector}"
                   ItemsSource="{Binding Items}"
@@ -113,6 +84,7 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="150, 0, 150, 0"/>
                 </Style>
             </ListView.ItemContainerStyle>
 
