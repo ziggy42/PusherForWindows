@@ -6,7 +6,7 @@ namespace PusherForWindows.Model
     {
         public string FileName { get; set; }
         public string MimeType { get; set; }
-        public Uri FileUrl { get; set; }
+        public Uri URL { get; set; }
 
         public PushFile(string Iden, TYPES Type, string Title, long Created, long Modified,
             string FileName, string MimeType, string FileUrl)
@@ -14,7 +14,7 @@ namespace PusherForWindows.Model
         {
             this.FileName = FileName;
             this.MimeType = MimeType;
-            this.FileUrl = new Uri(FileUrl);
+            this.URL = new Uri(FileUrl);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Text.RegularExpressions;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace PusherForWindows.Model
@@ -7,7 +8,7 @@ namespace PusherForWindows.Model
     {
         public DataTemplate PushNoteTemplate { get; set; }
         public DataTemplate PushLinkTemplate { get; set; }
-        public DataTemplate PushFileTemplate { get; set; }
+        public DataTemplate PushImageTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
@@ -18,7 +19,10 @@ namespace PusherForWindows.Model
                 return PushLinkTemplate;
 
             if (item is PushFile)
-                return PushFileTemplate;
+                if ((new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)item).MimeType).Success)
+                    return PushImageTemplate;
+                else
+                    return PushLinkTemplate;
 
             return base.SelectTemplateCore(item, container);
         }
