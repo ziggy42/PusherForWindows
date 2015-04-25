@@ -10,9 +10,12 @@ namespace PusherForWindows
 {
     public sealed partial class NewPushFlyout : SettingsFlyout
     {
-        public NewPushFlyout()
+        private Page parent;
+
+        public NewPushFlyout(Page parent)
         {
             this.InitializeComponent();
+            this.parent = parent;
         }
 
         private async void SendPushButton_Click(object sender, RoutedEventArgs e)
@@ -25,7 +28,8 @@ namespace PusherForWindows
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 {
-                    if (await PusherUtils.PushNoteAsync(body, title))
+                    var newPush = await PusherUtils.PushNoteAsync(body, title);
+                    if (newPush != null)
                     {
                         TitleTextBox.Text = "";
                         BodyTextBox.Text = "";
@@ -41,6 +45,8 @@ namespace PusherForWindows
                         toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(5);
 
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
+
+                        ((MainPage)this.parent).OnNewPush(newPush);
                     }
                     else
                     {

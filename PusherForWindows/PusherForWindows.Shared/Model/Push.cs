@@ -1,7 +1,7 @@
 ﻿
 namespace PusherForWindows.Model
 {
-    class Push
+    public class Push
     {
         public string Iden { get; set; }
         public string Title { get; set; }

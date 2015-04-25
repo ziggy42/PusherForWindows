@@ -40,7 +40,7 @@ namespace PusherForWindows.Pusher
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
         }
 
-        public async static Task<bool> PushNoteAsync(string message, string title = "", string device = "")
+        public async static Task<Push> PushNoteAsync(string message, string title = "", string device = "")
         {
             var values = new Dictionary<string, string>
             {
@@ -56,7 +56,28 @@ namespace PusherForWindows.Pusher
             var response = await client.PostAsync(
                 "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
 
-            return response.IsSuccessStatusCode;
+            System.Diagnostics.Debug.WriteLine(
+                response.Content.ReadAsStringAsync().Result);
+
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+                switch ((string)push.type)
+                {
+                    case "note":
+                        return new PushNote((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                (string)push.body);
+                    case "file":
+                        return new PushFile((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                            (string)push.file_name, (string)push.file_type, (string)push.file_url);
+                    case "link":
+                        return new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                            (string)push.url);
+                }
+
+            }
+
+            return null;
         }
 
         public async static Task<Dictionary<string, string>> GetUserInfoAsync()

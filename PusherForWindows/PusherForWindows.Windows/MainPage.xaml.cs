@@ -14,7 +14,7 @@ namespace PusherForWindows
 
     public sealed partial class MainPage : Page
     {
-        private PushDataSource pushDataSource = new PushDataSource();
+        PushDataSource pushDataSource = new PushDataSource();
 
         public MainPage()
         {
@@ -94,13 +94,18 @@ namespace PusherForWindows
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
         {
-            var flyout = new NewPushFlyout { };
+            var flyout = new NewPushFlyout(this);
             flyout.ShowIndependent();
         }
 
         private void PushesListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             //TODO do something
+        }
+
+        public void OnNewPush(Push push)
+        {
+            pushDataSource.Add(push);
         }
     }
 }

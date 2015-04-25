@@ -14,7 +14,7 @@ namespace PusherForWindows.Model
 
         public void Add(Push push)
         {
-            this.pushes.Add(push);
+            this.pushes.Insert(0, push);
         }
 
         public void Remove(Push push)
