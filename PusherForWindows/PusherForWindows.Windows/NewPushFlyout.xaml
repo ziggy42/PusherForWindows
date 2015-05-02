@@ -19,7 +19,12 @@
             <TextBlock FontSize="15" Margin="0, 20, 0, 0">Body</TextBlock>
             <TextBox Name="BodyTextBox" TextWrapping="Wrap" Width="265"/>
 
-            <Button Name="SendPushButton" Click="SendPushButton_Click" Margin="0, 20, 0, 0" HorizontalAlignment="Right">Send</Button>
+            <Image Name="FileImage" Visibility="Collapsed" Margin="0, 20, 0, 0"></Image>
+            
+            <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="FilePickerButton" Click="FilePickerButton_Click" Margin="0, 20, 0, 0" HorizontalAlignment="Right">Choose a File</Button>
+                <Button Name="SendPushButton" Click="SendPushButton_Click" Margin="0, 20, 0, 0" HorizontalAlignment="Right">Send</Button>
+            </StackPanel>
             
         </StackPanel>
 

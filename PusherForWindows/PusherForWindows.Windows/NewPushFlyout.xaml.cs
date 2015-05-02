@@ -2,15 +2,20 @@
 using System;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.Connectivity;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace PusherForWindows
 {
     public sealed partial class NewPushFlyout : SettingsFlyout
     {
         private Page parent;
+        private StorageFile file;
 
         public NewPushFlyout(Page parent)
         {
@@ -23,12 +28,14 @@ namespace PusherForWindows
             string title = TitleTextBox.Text;
             string body = BodyTextBox.Text;
 
-            if (title.Length > 0 || body.Length > 0)
+            if (title.Length > 0 || body.Length > 0 || file != null)
             {
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 {
-                    var newPush = await PusherUtils.PushNoteAsync(body, title);
+                    var newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title) : 
+                        await PusherUtils.PushNoteAsync(body, title);
+                    
                     if (newPush != null)
                     {
                         TitleTextBox.Text = "";
@@ -63,6 +70,30 @@ namespace PusherForWindows
                     messageDialog.DefaultCommandIndex = 1;
                     await messageDialog.ShowAsync();
                 }
+            }
+        }
+
+        private async void FilePickerButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
+
+            file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+            {
+                FileImage.Visibility = Visibility.Visible;
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.SetSource((FileRandomAccessStream)await file.OpenAsync(FileAccessMode.Read));
+                FileImage.Source = bitmapImage;
+                this.ShowIndependent();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Operazione cancellata");
             }
         }
     }
