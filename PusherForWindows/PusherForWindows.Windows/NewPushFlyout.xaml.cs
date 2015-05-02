@@ -33,6 +33,7 @@ namespace PusherForWindows
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 {
+                    SendingProgressRing.IsActive = true;
                     var newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title) : 
                         await PusherUtils.PushNoteAsync(body, title);
                     
@@ -71,6 +72,7 @@ namespace PusherForWindows
                     await messageDialog.ShowAsync();
                 }
             }
+            SendingProgressRing.IsActive = false;
         }
 
         private async void FilePickerButton_Click(object sender, RoutedEventArgs e)
