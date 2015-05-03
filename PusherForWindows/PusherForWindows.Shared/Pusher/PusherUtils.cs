@@ -92,7 +92,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<Push> PushFileAsync(StorageFile file, string message, string title = "", string device = "")
+        public async static Task<Push> PushFileAsync(StorageFile file, string body="", string title = "", string device = "")
         {
             var values = new Dictionary<string, string>
             {
@@ -136,7 +136,8 @@ namespace PusherForWindows.Pusher
                     { "file_name", file.Name}, 
                     { "file_type", file.ContentType }, 
                     { "file_url", file_url}, 
-                    { "body", message}
+                    { "title", title},
+                    { "body", body}
                 };
 
                 response = await Client.PostAsync(
