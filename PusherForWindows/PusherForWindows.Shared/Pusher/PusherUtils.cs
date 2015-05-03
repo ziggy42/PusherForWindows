@@ -21,6 +21,22 @@ namespace PusherForWindows.Pusher
         public static readonly string USER_NAME_KEY = "name";
         public static readonly string USER_PIC_URL_KEY = "picurl";
 
+        private static HttpClient client;
+        private static HttpClient Client
+        {
+            get
+            {
+                if (client == null)
+                {
+                    client = new HttpClient();
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                        (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+                }
+
+                return client;
+            }
+        }
+
         public static bool IsUserLoggedIn()
         {
             if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(LOGIN_KEY))
@@ -52,10 +68,7 @@ namespace PusherForWindows.Pusher
                { "device_iden", device}
             };
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
-            var response = await client.PostAsync(
+            var response = await Client.PostAsync(
                 "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
 
             System.Diagnostics.Debug.WriteLine(
@@ -90,10 +103,7 @@ namespace PusherForWindows.Pusher
                { "file_type", file.ContentType }
             };
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
-            var response = await client.PostAsync(
+            var response = await Client.PostAsync(
                 "https://api.pushbullet.com/v2/upload-request", new FormUrlEncodedContent(values));
 
             dynamic res = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
@@ -101,7 +111,7 @@ namespace PusherForWindows.Pusher
             var file_url = (string)res.file_url;
             dynamic data = res.data;
 
-            client = new HttpClient();
+            HttpClient noAouthClient = new HttpClient();
             var multipartFormDataContent = new MultipartFormDataContent();
             multipartFormDataContent.Add(AddContent("acl", (string)data.acl));
             multipartFormDataContent.Add(AddContent("awsaccesskeyid", (string)data.awsaccesskeyid));
@@ -120,12 +130,10 @@ namespace PusherForWindows.Pusher
 
             multipartFormDataContent.Add(fileContent);
 
-            response = await client.PostAsync(upload_url, multipartFormDataContent);
+            response = await noAouthClient.PostAsync(upload_url, multipartFormDataContent);
 
             if (response.IsSuccessStatusCode)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                    (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
                 values = new Dictionary<string, string>
                 {
                     { "type", "file" }, 
@@ -135,7 +143,7 @@ namespace PusherForWindows.Pusher
                     {"body" , message}
                 };
 
-                response = await client.PostAsync(
+                response = await Client.PostAsync(
                     "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
 
                 if (response.IsSuccessStatusCode)
@@ -161,10 +169,7 @@ namespace PusherForWindows.Pusher
 
         public async static Task<Dictionary<string, string>> GetUserInfoAsync()
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
-            var response = await client.GetAsync("https://api.pushbullet.com/v2/users/me");
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/users/me");
             var responseString = await response.Content.ReadAsStringAsync();
 
             dynamic json = JsonConvert.DeserializeObject(responseString);
@@ -180,10 +185,7 @@ namespace PusherForWindows.Pusher
 
         public async static Task<List<string[]>> GetDeviceListAsync()
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
-            var response = await client.GetAsync("https://api.pushbullet.com/v2/devices");
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/devices");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic json = JsonConvert.DeserializeObject(responseString);
 
@@ -196,10 +198,7 @@ namespace PusherForWindows.Pusher
 
         public async static Task<ObservableCollection<Push>> GetNotesListAsync()
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
-            var response = await client.GetAsync("https://api.pushbullet.com/v2/pushes");
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
             var responseString = await response.Content.ReadAsStringAsync();
             dynamic json = JsonConvert.DeserializeObject(responseString);
 
