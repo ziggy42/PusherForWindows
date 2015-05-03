@@ -35,5 +35,11 @@ namespace PusherForWindows.Model
                 this.pushes.Add(p);
             }
         }
+
+        public void Refresh()
+        {
+            pushes.Clear();
+            Populate();
+        }
     }
 }

@@ -107,5 +107,10 @@ namespace PusherForWindows
         {
             pushDataSource.Add(push);
         }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            pushDataSource.Refresh();
+        }
     }
 }
