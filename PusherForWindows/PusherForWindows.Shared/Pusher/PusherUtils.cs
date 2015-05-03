@@ -167,64 +167,76 @@ namespace PusherForWindows.Pusher
         public async static Task<Dictionary<string, string>> GetUserInfoAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/users/me");
-
-            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-            var values = new Dictionary<string, string>()
+            if(response.IsSuccessStatusCode)
             {
-                { USER_NAME_KEY, (string)json.name},
-                {USER_PIC_URL_KEY, (string)json.image_url}
-            };
+                dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+                var values = new Dictionary<string, string>()
+                {
+                    { USER_NAME_KEY, (string)json.name},
+                    {USER_PIC_URL_KEY, (string)json.image_url}
+                };
 
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
+            }
 
-            return values;
+            return null;
         }
 
         public async static Task<List<string[]>> GetDeviceListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/devices");
-            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-            List<string[]> devicesList = new List<string[]>();
-            foreach (dynamic device in json["devices"])
-                devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
+                List<string[]> devicesList = new List<string[]>();
+                foreach (dynamic device in json["devices"])
+                    devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
 
-            return devicesList;
+                return devicesList;
+            }
+
+            return null;
         }
 
         public async static Task<ObservableCollection<Push>> GetNotesListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
-            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-
-            var pushes = new ObservableCollection<Push>();
-            foreach (dynamic push in json["pushes"])
+            if (response.IsSuccessStatusCode)
             {
-                if ((bool)push.active)
+                dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+
+                var pushes = new ObservableCollection<Push>();
+                foreach (dynamic push in json["pushes"])
                 {
-                    switch ((string)push.type)
+                    if ((bool)push.active)
                     {
-                        case "note":
-                            pushes.Add(new PushNote(
-                                (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                (string)push.body));
-                            break;
-                        case "link":
-                            pushes.Add(new PushLink(
-                                (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                (string)push.url));
-                            break;
-                        case "file":
-                            pushes.Add(new PushFile(
-                                 (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                 (string)push.file_name, (string)push.file_type, (string)push.file_url));
-                            break;
+                        switch ((string)push.type)
+                        {
+                            case "note":
+                                pushes.Add(new PushNote(
+                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                    (string)push.body));
+                                break;
+                            case "link":
+                                pushes.Add(new PushLink(
+                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                    (string)push.url));
+                                break;
+                            case "file":
+                                pushes.Add(new PushFile(
+                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                     (string)push.file_name, (string)push.file_type, (string)push.file_url));
+                                break;
+                        }
                     }
                 }
+
+                return pushes;
             }
 
-            return pushes;
+            return null;
         }
     }
 }
