@@ -3,6 +3,7 @@ using System;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Notifications;
@@ -87,7 +88,7 @@ namespace PusherForWindows
             {
                 FileImage.Visibility = Visibility.Visible;
                 BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.SetSource((FileRandomAccessStream)await file.OpenAsync(FileAccessMode.Read));
+                bitmapImage.SetSource(await file.GetThumbnailAsync(ThumbnailMode.SingleItem));
                 FileImage.Source = bitmapImage;
                 this.ShowIndependent();
             }

@@ -128,7 +128,6 @@ namespace PusherForWindows.Pusher
             multipartFormDataContent.Add(fileContent);
 
             response = await noAouthClient.PostAsync(upload_url, multipartFormDataContent);
-
             if (response.IsSuccessStatusCode)
             {
                 values = new Dictionary<string, string>
