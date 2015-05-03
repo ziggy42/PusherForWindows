@@ -60,13 +60,19 @@ namespace PusherForWindows.Pusher
 
         public async static Task<Push> PushNoteAsync(string message, string title = "", string device = "")
         {
-            var values = new Dictionary<string, string>
+            var values = new Dictionary<string, string>();
+            values.Add("title", title);
+            values.Add("device_iden", device);
+            if(Uri.IsWellFormedUriString(message, UriKind.Absolute))
             {
-               { "type", "note" },
-               { "title", title },
-               { "body", message },
-               { "device_iden", device}
-            };
+                values.Add("type", "link");
+                values.Add("url", message);                
+            }
+            else
+            {
+                values.Add("type", "note");
+                values.Add("body", message);
+            }
 
             var response = await Client.PostAsync(
                 "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
@@ -79,9 +85,6 @@ namespace PusherForWindows.Pusher
                     case "note":
                         return new PushNote((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                                 (string)push.body);
-                    case "file":
-                        return new PushFile((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                            (string)push.file_name, (string)push.file_type, (string)push.file_url);
                     case "link":
                         return new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                             (string)push.url);

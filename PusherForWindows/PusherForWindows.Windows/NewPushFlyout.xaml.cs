@@ -42,6 +42,7 @@ namespace PusherForWindows
                     {
                         TitleTextBox.Text = "";
                         BodyTextBox.Text = "";
+                        FileImage.Source = null;
 
                         ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
                         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
