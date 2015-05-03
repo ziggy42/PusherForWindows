@@ -11,7 +11,7 @@ using System.IO;
 
 namespace PusherForWindows.Pusher
 {
-    class PusherUtils
+    static class PusherUtils
     {
         public static readonly string CLIENT_ID = "IfgaX7cNfg0bdIcXgoLmROL6xFlT9dgq";
         public static readonly string CLIENT_SECRET = "w6QmD8gtBtz9gcT6RcjJ9JtIwgP5KVRx";
@@ -70,9 +70,6 @@ namespace PusherForWindows.Pusher
 
             var response = await Client.PostAsync(
                 "https://api.pushbullet.com/v2/pushes", new FormUrlEncodedContent(values));
-
-            System.Diagnostics.Debug.WriteLine(
-                response.Content.ReadAsStringAsync().Result);
 
             if (response.IsSuccessStatusCode)
             {
@@ -137,10 +134,10 @@ namespace PusherForWindows.Pusher
                 values = new Dictionary<string, string>
                 {
                     { "type", "file" }, 
-                    { "file_name" , file.Name}, 
-                    { "file_type" , file.ContentType }, 
-                    {"file_url" , file_url}, 
-                    {"body" , message}
+                    { "file_name", file.Name}, 
+                    { "file_type", file.ContentType }, 
+                    { "file_url", file_url}, 
+                    { "body", message}
                 };
 
                 response = await Client.PostAsync(
@@ -170,24 +167,24 @@ namespace PusherForWindows.Pusher
         public async static Task<Dictionary<string, string>> GetUserInfoAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/users/me");
-            var responseString = await response.Content.ReadAsStringAsync();
 
-            dynamic json = JsonConvert.DeserializeObject(responseString);
-            Dictionary<string, string> mDict = new Dictionary<string, string>();
-            mDict.Add(USER_NAME_KEY, (string)json.name);
-            mDict.Add(USER_PIC_URL_KEY, (string)json.image_url);
+            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+            var values = new Dictionary<string, string>()
+            {
+                { USER_NAME_KEY, (string)json.name},
+                {USER_PIC_URL_KEY, (string)json.image_url}
+            };
 
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
 
-            return mDict;
+            return values;
         }
 
         public async static Task<List<string[]>> GetDeviceListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/devices");
-            var responseString = await response.Content.ReadAsStringAsync();
-            dynamic json = JsonConvert.DeserializeObject(responseString);
+            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
             List<string[]> devicesList = new List<string[]>();
             foreach (dynamic device in json["devices"])
@@ -199,8 +196,7 @@ namespace PusherForWindows.Pusher
         public async static Task<ObservableCollection<Push>> GetNotesListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
-            var responseString = await response.Content.ReadAsStringAsync();
-            dynamic json = JsonConvert.DeserializeObject(responseString);
+            dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
             var pushes = new ObservableCollection<Push>();
             foreach (dynamic push in json["pushes"])
