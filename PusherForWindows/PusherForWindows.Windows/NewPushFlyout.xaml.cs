@@ -35,6 +35,9 @@ namespace PusherForWindows
                     == NetworkConnectivityLevel.InternetAccess)
                 {
                     SendingProgressRing.IsActive = true;
+                    SendPushButton.IsEnabled = false;
+                    FilePickerButton.IsEnabled = false;
+
                     var newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title) : 
                         await PusherUtils.PushNoteAsync(body, title);
                     
@@ -75,6 +78,8 @@ namespace PusherForWindows
                 }
             }
             SendingProgressRing.IsActive = false;
+            SendPushButton.IsEnabled = true;
+            FilePickerButton.IsEnabled = true;
         }
 
         private async void FilePickerButton_Click(object sender, RoutedEventArgs e)

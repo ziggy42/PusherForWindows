@@ -175,8 +175,8 @@ namespace PusherForWindows.Pusher
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
                 var values = new Dictionary<string, string>()
                 {
-                    { USER_NAME_KEY, (string)json.name},
-                    {USER_PIC_URL_KEY, (string)json.image_url}
+                    { USER_NAME_KEY, (string)json.name },
+                    { USER_PIC_URL_KEY, (string)json.image_url }
                 };
 
                 Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
