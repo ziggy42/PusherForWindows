@@ -60,6 +60,7 @@ namespace PusherForWindows
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
 
                         ((MainPage)this.parent).OnNewPush(newPush);
+                        this.Hide();
                     }
                     else
                     {
