@@ -1,7 +1,9 @@
 ﻿using PusherForWindows.Model;
 using PusherForWindows.Pusher;
+using PusherForWindows.View;
 using System;
 using System.Collections.Generic;
+using Windows.Networking.Connectivity;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -63,7 +65,10 @@ namespace PusherForWindows
 
         private async void SetupAsync()
         {
-            pushDataSource.Populate();
+            if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
+                    == NetworkConnectivityLevel.InternetAccess)
+                pushDataSource.Populate();
+            
             if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
             {
                 UserNameTextBlock.Text = (string)
@@ -111,6 +116,11 @@ namespace PusherForWindows
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             pushDataSource.Refresh();
+        }
+
+        private void GetDeviceListButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ChooseDevicePage));
         }
     }
 }
