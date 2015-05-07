@@ -97,6 +97,7 @@ namespace PusherForWindows.Pusher
 
         public async static Task<Push> PushFileAsync(StorageFile file, string body="", string title = "", string device = "")
         {
+            #region Obtain File upload URL
             var values = new Dictionary<string, string>
             {
                { "file_name", file.Name }, 
@@ -110,27 +111,34 @@ namespace PusherForWindows.Pusher
             var upload_url = (string)res.upload_url;
             var file_url = (string)res.file_url;
             dynamic data = res.data;
+            #endregion
 
-            HttpClient noAouthClient = new HttpClient();
-            var multipartFormDataContent = new MultipartFormDataContent();
-            multipartFormDataContent.Add(AddContent("acl", (string)data.acl));
-            multipartFormDataContent.Add(AddContent("awsaccesskeyid", (string)data.awsaccesskeyid));
-            multipartFormDataContent.Add(AddContent("content-type", file.ContentType));
-            multipartFormDataContent.Add(AddContent("key", (string)data.key));
-            multipartFormDataContent.Add(AddContent("policy", (string)data.policy));
-            multipartFormDataContent.Add(AddContent("signature", (string)data.signature));
-
-            var fileContent = new StreamContent((await file.OpenReadAsync()).AsStreamForRead());
-            fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            #region file upload
+            using (HttpClient noAuthHttpClient = new HttpClient())
             {
-                Name = "\"file\"",
-                FileName = "\"" + file.Name + "\""
-            };
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                var multipartFormDataContent = new MultipartFormDataContent();
+                multipartFormDataContent.Add(AddContent("acl", (string)data.acl));
+                multipartFormDataContent.Add(AddContent("awsaccesskeyid", (string)data.awsaccesskeyid));
+                multipartFormDataContent.Add(AddContent("content-type", file.ContentType));
+                multipartFormDataContent.Add(AddContent("key", (string)data.key));
+                multipartFormDataContent.Add(AddContent("policy", (string)data.policy));
+                multipartFormDataContent.Add(AddContent("signature", (string)data.signature));
 
-            multipartFormDataContent.Add(fileContent);
+                var fileContent = new StreamContent((await file.OpenReadAsync()).AsStreamForRead());
+                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "\"file\"",
+                    FileName = "\"" + file.Name + "\""
+                };
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
-            response = await noAouthClient.PostAsync(upload_url, multipartFormDataContent);
+                multipartFormDataContent.Add(fileContent);
+
+                response = await noAuthHttpClient.PostAsync(upload_url, multipartFormDataContent);
+            }
+            #endregion
+
+            #region push 
             if (response.IsSuccessStatusCode)
             {
                 values = new Dictionary<string, string>
@@ -153,6 +161,7 @@ namespace PusherForWindows.Pusher
                                 (string)push.file_name, (string)push.file_type, (string)push.file_url);
                 }
             }
+            #endregion
 
             return null;
         }
