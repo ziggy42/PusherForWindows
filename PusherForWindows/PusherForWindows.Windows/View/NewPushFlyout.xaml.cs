@@ -1,11 +1,11 @@
-﻿using PusherForWindows.Pusher;
+﻿using PusherForWindows.Model;
+using PusherForWindows.Pusher;
 using System;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,13 +15,13 @@ namespace PusherForWindows
 {
     public sealed partial class NewPushFlyout : SettingsFlyout
     {
-        private Page parent;
         private StorageFile file;
 
-        public NewPushFlyout(Page parent)
+        public event EventHandler<PushEventArgs> NewPushSent;
+
+        public NewPushFlyout()
         {
             this.InitializeComponent();
-            this.parent = parent;
         }
 
         private async void SendPushButton_Click(object sender, RoutedEventArgs e)
@@ -59,7 +59,7 @@ namespace PusherForWindows
 
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
 
-                        ((MainPage)this.parent).OnNewPush(newPush);
+                        OnNewPushSent(newPush);
                         this.Hide();
                     }
                     else
@@ -103,6 +103,29 @@ namespace PusherForWindows
             {
                 System.Diagnostics.Debug.WriteLine("Operazione cancellata");
             }
+        }
+
+        private void OnNewPushSent(Push newPush)
+        {
+            if(NewPushSent != null)
+                NewPushSent(this, new PushEventArgs(newPush));
+        }
+    }
+
+    public class PushEventArgs : EventArgs
+    {
+        public Push NewPush
+        {
+            get
+            {
+                return newPush;
+            }
+        }
+        private Push newPush;
+
+        public PushEventArgs(Push newPush)
+        {
+            this.newPush = newPush;
         }
     }
 }

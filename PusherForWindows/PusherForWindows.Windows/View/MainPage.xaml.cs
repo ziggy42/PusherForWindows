@@ -1,6 +1,5 @@
 ﻿using PusherForWindows.Model;
 using PusherForWindows.Pusher;
-using PusherForWindows.View;
 using System;
 using System.Collections.Generic;
 using Windows.Networking.Connectivity;
@@ -99,7 +98,8 @@ namespace PusherForWindows
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
         {
-            var flyout = new NewPushFlyout(this);
+            var flyout = new NewPushFlyout();
+            flyout.NewPushSent += OnNewPush;
             flyout.ShowIndependent();
         }
 
@@ -108,9 +108,9 @@ namespace PusherForWindows
             //TODO do something
         }
 
-        public void OnNewPush(Push push)
+        public void OnNewPush(object sender, PushEventArgs e)
         {
-            pushDataSource.Add(push);
+            pushDataSource.Add(e.NewPush);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -120,7 +120,7 @@ namespace PusherForWindows
 
         private void GetDeviceListButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ChooseDevicePage));
+            
         }
     }
 }
