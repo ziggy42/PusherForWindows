@@ -18,6 +18,7 @@ namespace PusherForWindows.View
 
     public sealed partial class ChooseDevicePage : Page
     {
+        private ObservableCollection<Push> pushes;
         private ObservableCollection<Device> devices = new ObservableCollection<Device>();
         public ObservableCollection<Device> Devices { get { return devices; } }
 
@@ -31,6 +32,7 @@ namespace PusherForWindows.View
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            pushes = ((ObservableCollection<Push>)e.Parameter);
             foreach (Device device in await PusherUtils.GetDeviceListAsync())
             {
                 devices.Add(device);
@@ -80,8 +82,9 @@ namespace PusherForWindows.View
                     Push newPush;
                     if (DevicesListView.SelectedItems.Count > 0)
                     {
-                        newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title, ((Device)DevicesListView.SelectedItems[0]).Iden) :
-                            await PusherUtils.PushNoteAsync(body, title, ((Device)DevicesListView.SelectedItems[0]).Iden);
+                        newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title,
+                            ((Device)DevicesListView.SelectedItems[0]).Iden) : await PusherUtils.PushNoteAsync(body, title,
+                            ((Device)DevicesListView.SelectedItems[0]).Iden);
                     }
                     else
                     {
@@ -106,6 +109,8 @@ namespace PusherForWindows.View
                         toast.ExpirationTime = DateTimeOffset.UtcNow.AddSeconds(5);
 
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
+
+                        pushes.Insert(0, newPush);
                     }
                     else
                     {

@@ -25,7 +25,7 @@ namespace PusherForWindows.Model
 
         public PushDataSource()
         {
-
+            
         }
 
         public PushDataSource(IList<Push> pushes)

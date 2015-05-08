@@ -127,7 +127,7 @@ namespace PusherForWindows
 
         private void ChooseDeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ChooseDevicePage));
+            this.Frame.Navigate(typeof(ChooseDevicePage), pushDataSource.Items);
         }
 
         private void FilterMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
