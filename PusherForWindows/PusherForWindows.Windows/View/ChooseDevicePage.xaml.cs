@@ -23,7 +23,7 @@ namespace PusherForWindows.View
             this.InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.GoBack();
         }
