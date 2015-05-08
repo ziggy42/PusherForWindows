@@ -1,5 +1,6 @@
 ﻿using PusherForWindows.Model;
 using PusherForWindows.Pusher;
+using PusherForWindows.View;
 using System;
 using System.Collections.Generic;
 using Windows.Networking.Connectivity;
@@ -9,6 +10,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Navigation;
 
 namespace PusherForWindows
 {
@@ -20,7 +22,26 @@ namespace PusherForWindows
         public MainPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
             PushesListView.DataContext = pushDataSource;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.NavigationMode != NavigationMode.Back)
+            {
+                if (!PusherUtils.IsUserLoggedIn())
+                {
+                    CreateLoginDialogAsync();
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("I'm in");
+                    SetupAsync();
+                }
+            }
+            System.Diagnostics.Debug.WriteLine(e.NavigationMode);
         }
 
         private async void CreateLoginDialogAsync()
@@ -83,19 +104,6 @@ namespace PusherForWindows
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!PusherUtils.IsUserLoggedIn())
-            {
-                CreateLoginDialogAsync();
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("I'm in");
-                SetupAsync();
-            }
-        }
-
         private void PushButton_Click(object sender, RoutedEventArgs e)
         {
             var flyout = new NewPushFlyout();
@@ -118,9 +126,9 @@ namespace PusherForWindows
             pushDataSource.Refresh();
         }
 
-        private void GetDeviceListButton_Click(object sender, RoutedEventArgs e)
+        private void ChooseDeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            this.Frame.Navigate(typeof(ChooseDevicePage));
         }
     }
 }

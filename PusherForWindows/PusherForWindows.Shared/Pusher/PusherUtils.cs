@@ -212,7 +212,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<ObservableCollection<Push>> GetNotesListAsync()
+        public async static Task<ObservableCollection<Push>> GetPushListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
             if (response.IsSuccessStatusCode)

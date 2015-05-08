@@ -6,8 +6,7 @@
     xmlns:shared="using:PusherForWindows.Model"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="pushNoteTemplate">
@@ -74,7 +73,7 @@
                     Style="{StaticResource HoverTextBlockStyle}"
                     Padding="10, 10, 10, 10"
                     HorizontalAlignment="Stretch"
-                    Click="GetDeviceListButton_Click"
+                    Click="ChooseDeviceButton_Click"
                     Content="Choose Device"/>         
                 
                 <Button 

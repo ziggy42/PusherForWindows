@@ -29,7 +29,7 @@ namespace PusherForWindows.Model
 
         public async void Populate()
         {
-            var newPushes = await PusherUtils.GetNotesListAsync();
+            var newPushes = await PusherUtils.GetPushListAsync();
             foreach (var p in newPushes)
             {
                 this.pushes.Add(p);
