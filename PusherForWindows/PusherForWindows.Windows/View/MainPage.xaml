@@ -31,15 +31,31 @@
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1" FontSize="16"/>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="pushFileTemplate">
+        <DataTemplate x:Key="pushImageTemplate">
             <Grid Background="White">
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
-                <Image Source="{Binding URL}" Grid.Row="1"/>
+                <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
+                <Image Source="{Binding URL}" Grid.Row="2"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="pushFileTemplate">
+            <Grid Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
+                <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
+                <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="2" FontSize="16"/>
             </Grid>
         </DataTemplate>
 
@@ -47,7 +63,8 @@
             x:Key="PushTemplateSelector" 
             PushNoteTemplate="{StaticResource pushNoteTemplate}"
             PushLinkTemplate="{StaticResource pushLinkTemplate}"
-            PushImageTemplate="{StaticResource pushFileTemplate}"/>
+            PushImageTemplate="{StaticResource pushImageTemplate}"
+            PushFileTemplate="{StaticResource pushFileTemplate}"/>
 
     </Page.Resources>
 

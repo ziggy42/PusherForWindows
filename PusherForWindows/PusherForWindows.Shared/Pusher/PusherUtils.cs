@@ -153,7 +153,7 @@ namespace PusherForWindows.Pusher
                 if (response.IsSuccessStatusCode)
                 {
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-                    return new PushFile((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                    return new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, (long)push.modified,
                                 (string)push.file_name, (string)push.file_type, (string)push.file_url);
                 }
             }
@@ -234,7 +234,7 @@ namespace PusherForWindows.Pusher
                                 break;
                             case "file":
                                 pushes.Add(new PushFile(
-                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                     (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
                                      (string)push.file_name, (string)push.file_type, (string)push.file_url));
                                 break;
                         }

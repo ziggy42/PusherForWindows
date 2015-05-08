@@ -12,6 +12,8 @@ namespace PusherForWindows.Model
         
         public DataTemplate PushImageTemplate { get; set; }
 
+        public DataTemplate PushFileTemplate { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             if (item is PushNote)
@@ -24,7 +26,7 @@ namespace PusherForWindows.Model
                 if ((new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)item).MimeType).Success)
                     return this.PushImageTemplate;
                 else
-                    return this.PushLinkTemplate;
+                    return this.PushFileTemplate;
 
             return base.SelectTemplateCore(item, container);
         }
