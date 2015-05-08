@@ -148,7 +148,8 @@ namespace PusherForWindows.Pusher
                     { "file_type", file.ContentType }, 
                     { "file_url", file_url}, 
                     { "title", title},
-                    { "body", body}
+                    { "body", body},
+                    {"device_iden", device}
                 };
 
                 response = await Client.PostAsync(
@@ -195,16 +196,17 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<List<string[]>> GetDeviceListAsync()
+        public async static Task<List<Device>> GetDeviceListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/devices");
             if (response.IsSuccessStatusCode)
             {
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-                List<string[]> devicesList = new List<string[]>();
+                List<Device> devicesList = new List<Device>();
                 foreach (dynamic device in json["devices"])
-                    devicesList.Add(new string[] { (string)device.iden, (string)device.nickname });
+                    if((bool)device.active)
+                        devicesList.Add(new Device((string)device.iden, (string)device.nickname ));
 
                 return devicesList;
             }

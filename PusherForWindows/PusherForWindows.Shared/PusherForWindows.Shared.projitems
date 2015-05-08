@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Push.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushFile.cs" />

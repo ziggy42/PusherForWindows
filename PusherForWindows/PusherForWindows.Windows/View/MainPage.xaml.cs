@@ -41,7 +41,6 @@ namespace PusherForWindows
                     SetupAsync();
                 }
             }
-            System.Diagnostics.Debug.WriteLine(e.NavigationMode);
         }
 
         private async void CreateLoginDialogAsync()
