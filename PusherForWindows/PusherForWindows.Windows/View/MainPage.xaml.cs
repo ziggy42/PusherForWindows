@@ -1,8 +1,8 @@
-﻿using PusherForWindows.Model;
+﻿using System;
+using System.Linq;
+using PusherForWindows.Model;
 using PusherForWindows.Pusher;
 using PusherForWindows.View;
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Windows.Networking.Connectivity;
 using Windows.Security.Authentication.Web;
@@ -14,17 +14,16 @@ using Windows.UI.Xaml.Navigation;
 
 namespace PusherForWindows
 {
-
     public sealed partial class MainPage : Page
     {
-        PushDataSource pushDataSource = new PushDataSource();
+        private PushDataSource pushDataSource = new PushDataSource();
 
         public MainPage()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
-            PushesListView.DataContext = pushDataSource;
+            PushesListView.DataContext = this.pushDataSource;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -33,12 +32,12 @@ namespace PusherForWindows
             {
                 if (!PusherUtils.IsUserLoggedIn())
                 {
-                    CreateLoginDialogAsync();
+                    this.CreateLoginDialogAsync();
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("I'm in");
-                    SetupAsync();
+                    this.SetupAsync();
                 }
             }
         }
@@ -46,7 +45,7 @@ namespace PusherForWindows
         private async void CreateLoginDialogAsync()
         {
             var dialog = new CoreWindowDialog("Welcome to Pusher");
-            dialog.Commands.Add(new UICommand("Login with Pushbullet", PerformLoginAsync));
+            dialog.Commands.Add(new UICommand("Login with Pushbullet", this.PerformLoginAsync));
             await dialog.ShowAsync();
         }
 
@@ -54,24 +53,24 @@ namespace PusherForWindows
         {
             try
             {
-                System.Uri StartUri = new Uri(PusherUtils.GetPushbulletLoginURL());
-                System.Uri EndUri = new Uri(PusherUtils.REDIRECT_URI);
+                System.Uri startUri = new Uri(PusherUtils.GetPushbulletLoginURL());
+                System.Uri endUri = new Uri(PusherUtils.REDIRECT_URI);
 
-                WebAuthenticationResult WebAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
-                                                        WebAuthenticationOptions.None, StartUri, EndUri);
-                if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
+                WebAuthenticationResult webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
+                                                        WebAuthenticationOptions.None, startUri, endUri);
+                if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
                 {
-                    PusherUtils.StoreAccessToken(WebAuthenticationResult.ResponseData.ToString());
+                    PusherUtils.StoreAccessToken(webAuthenticationResult.ResponseData.ToString());
                 }
-                else if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
+                else if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
                 {
                     System.Diagnostics.Debug.WriteLine("HTTP Error returned by AuthenticateAsync() : " +
-                        WebAuthenticationResult.ResponseErrorDetail.ToString());
+                        webAuthenticationResult.ResponseErrorDetail.ToString());
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("Error returned by AuthenticateAsync() : " +
-                        WebAuthenticationResult.ResponseStatus.ToString());
+                        webAuthenticationResult.ResponseStatus.ToString());
                 }
             }
             catch (Exception Error)
@@ -79,14 +78,14 @@ namespace PusherForWindows
                 System.Diagnostics.Debug.WriteLine(Error.ToString());
             }
 
-            SetupAsync();
+            this.SetupAsync();
         }
 
         private async void SetupAsync()
         {
             if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
-                pushDataSource.Populate();
+                this.pushDataSource.Populate();
 
             /*if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
             {
@@ -117,17 +116,17 @@ namespace PusherForWindows
 
         public void OnNewPush(object sender, PushEventArgs e)
         {
-            pushDataSource.Add(e.NewPush);
+            this.pushDataSource.Add(e.NewPush);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            pushDataSource.Refresh();
+            this.pushDataSource.Refresh();
         }
 
         private void ChooseDeviceButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ChooseDevicePage), pushDataSource.Items);
+            this.Frame.Navigate(typeof(ChooseDevicePage), this.pushDataSource.Items);
         }
 
         private void FilterMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
@@ -150,7 +149,7 @@ namespace PusherForWindows
                         (new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)p).MimeType).Success);
                     break;
                 default:
-                    PushesListView.DataContext = pushDataSource;
+                    PushesListView.DataContext = this.pushDataSource;
                     break;
             }
 

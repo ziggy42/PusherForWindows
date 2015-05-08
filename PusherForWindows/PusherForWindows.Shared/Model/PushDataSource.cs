@@ -1,12 +1,13 @@
-﻿using PusherForWindows.Pusher;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using PusherForWindows.Pusher;
 
 namespace PusherForWindows.Model
 {
-    class PushDataSource
+    public class PushDataSource
     {
         private ObservableCollection<Push> pushes = new ObservableCollection<Push>();
+
         public ObservableCollection<Push> Items
         {
             get { return this.pushes; }
@@ -20,12 +21,11 @@ namespace PusherForWindows.Model
 
         public void Remove(Push push)
         {
-            pushes.Remove(push);
+            this.pushes.Remove(push);
         }
 
         public PushDataSource()
-        {
-            
+        {   
         }
 
         public PushDataSource(IList<Push> pushes)
@@ -47,8 +47,8 @@ namespace PusherForWindows.Model
 
         public void Refresh()
         {
-            pushes.Clear();
-            Populate();
+            this.pushes.Clear();
+            this.Populate();
         }
     }
 }

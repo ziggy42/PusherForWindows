@@ -1,7 +1,7 @@
-﻿using PusherForWindows.Model;
-using PusherForWindows.Pusher;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using PusherForWindows.Model;
+using PusherForWindows.Pusher;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
@@ -15,14 +15,18 @@ using Windows.UI.Xaml.Navigation;
 
 namespace PusherForWindows.View
 {
-
     public sealed partial class ChooseDevicePage : Page
     {
+        private StorageFile file;
         private ObservableCollection<Push> pushes;
         private ObservableCollection<Device> devices = new ObservableCollection<Device>();
-        public ObservableCollection<Device> Devices { get { return devices; } }
-
-        private StorageFile file;
+        
+        public ObservableCollection<Device> Devices 
+        { 
+            get { 
+                return this.devices; 
+            } 
+        }
 
         public ChooseDevicePage()
         {
@@ -32,10 +36,10 @@ namespace PusherForWindows.View
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            pushes = ((ObservableCollection<Push>)e.Parameter);
+            this.pushes = (ObservableCollection<Push>)e.Parameter;
             foreach (Device device in await PusherUtils.GetDeviceListAsync())
             {
-                devices.Add(device);
+                this.devices.Add(device);
             }
         }
 
@@ -51,12 +55,12 @@ namespace PusherForWindows.View
             openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             openPicker.FileTypeFilter.Add("*");
 
-            file = await openPicker.PickSingleFileAsync();
-            if (file != null)
+            this.file = await openPicker.PickSingleFileAsync();
+            if (this.file != null)
             {
                 FileImage.Visibility = Visibility.Visible;
                 BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.SetSource(await file.GetThumbnailAsync(ThumbnailMode.SingleItem));
+                bitmapImage.SetSource(await this.file.GetThumbnailAsync(ThumbnailMode.SingleItem));
                 FileImage.Source = bitmapImage;
             }
             else
@@ -70,7 +74,7 @@ namespace PusherForWindows.View
             string title = TitleTextBox.Text;
             string body = BodyTextBox.Text;
 
-            if (title.Length > 0 || body.Length > 0 || file != null)
+            if (title.Length > 0 || body.Length > 0 || this.file != null)
             {
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
@@ -82,20 +86,20 @@ namespace PusherForWindows.View
                     Push newPush;
                     if (DevicesListView.SelectedItems.Count > 0)
                     {
-                        newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title,
+                        newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title,
                             ((Device)DevicesListView.SelectedItems[0]).Iden) : await PusherUtils.PushNoteAsync(body, title,
                             ((Device)DevicesListView.SelectedItems[0]).Iden);
                     }
                     else
                     {
-                        newPush = (file != null) ? await PusherUtils.PushFileAsync(file, body, title) :
+                        newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
                             await PusherUtils.PushNoteAsync(body, title);
                     }
 
                     if (newPush != null)
                     {
-                        TitleTextBox.Text = "";
-                        BodyTextBox.Text = "";
+                        TitleTextBox.Text = string.Empty;
+                        BodyTextBox.Text = string.Empty;
                         FileImage.Source = null;
 
                         ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
@@ -110,7 +114,7 @@ namespace PusherForWindows.View
 
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
 
-                        pushes.Insert(0, newPush);
+                        this.pushes.Insert(0, newPush);
                     }
                     else
                     {
@@ -128,6 +132,7 @@ namespace PusherForWindows.View
                     await messageDialog.ShowAsync();
                 }
             }
+
             SendingProgressRing.IsActive = false;
             SendPushButton.IsEnabled = true;
             FilePickerButton.IsEnabled = true;

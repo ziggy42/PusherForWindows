@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
-using PusherForWindows.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.Storage;
-using System.IO;
+using Newtonsoft.Json;
+using PusherForWindows.Model;
 
 namespace PusherForWindows.Pusher
 {
-    static class PusherUtils
+    public static class PusherUtils
     {
         public static readonly string CLIENT_ID = "IfgaX7cNfg0bdIcXgoLmROL6xFlT9dgq";
         public static readonly string CLIENT_SECRET = "w6QmD8gtBtz9gcT6RcjJ9JtIwgP5KVRx";
@@ -22,6 +22,7 @@ namespace PusherForWindows.Pusher
         public static readonly string USER_PIC_URL_KEY = "picurl";
 
         private static HttpClient client;
+
         private static HttpClient Client
         {
             get
@@ -58,15 +59,15 @@ namespace PusherForWindows.Pusher
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
         }
 
-        public async static Task<Push> PushNoteAsync(string message, string title = "", string device = "")
+        public static async Task<Push> PushNoteAsync(string message, string title = "", string device = "")
         {
             var values = new Dictionary<string, string>();
             values.Add("title", title);
             values.Add("device_iden", device);
-            if(Uri.IsWellFormedUriString(message, UriKind.Absolute))
+            if (Uri.IsWellFormedUriString(message, UriKind.Absolute))
             {
                 values.Add("type", "link");
-                values.Add("url", message);                
+                values.Add("url", message);
             }
             else
             {
@@ -89,15 +90,13 @@ namespace PusherForWindows.Pusher
                         return new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                             (string)push.url);
                 }
-
             }
 
             return null;
         }
 
-        public async static Task<Push> PushFileAsync(StorageFile file, string body="", string title = "", string device = "")
+        public static async Task<Push> PushFileAsync(StorageFile file, string body = "", string title = "", string device = "")
         {
-            #region Obtain File upload URL
             var values = new Dictionary<string, string>
             {
                { "file_name", file.Name }, 
@@ -111,9 +110,7 @@ namespace PusherForWindows.Pusher
             var upload_url = (string)res.upload_url;
             var file_url = (string)res.file_url;
             dynamic data = res.data;
-            #endregion
 
-            #region file upload
             using (HttpClient noAuthHttpClient = new HttpClient())
             {
                 var multipartFormDataContent = new MultipartFormDataContent();
@@ -136,20 +133,18 @@ namespace PusherForWindows.Pusher
 
                 response = await noAuthHttpClient.PostAsync(upload_url, multipartFormDataContent);
             }
-            #endregion
 
-            #region push 
             if (response.IsSuccessStatusCode)
             {
                 values = new Dictionary<string, string>
                 {
                     { "type", "file" }, 
-                    { "file_name", file.Name}, 
+                    { "file_name", file.Name }, 
                     { "file_type", file.ContentType }, 
-                    { "file_url", file_url}, 
-                    { "title", title},
-                    { "body", body},
-                    {"device_iden", device}
+                    { "file_url", file_url }, 
+                    { "title", title },
+                    { "body", body },
+                    { "device_iden", device }
                 };
 
                 response = await Client.PostAsync(
@@ -162,7 +157,6 @@ namespace PusherForWindows.Pusher
                                 (string)push.file_name, (string)push.file_type, (string)push.file_url);
                 }
             }
-            #endregion
 
             return null;
         }
@@ -177,10 +171,10 @@ namespace PusherForWindows.Pusher
             return fileContent;
         }
 
-        public async static Task<Dictionary<string, string>> GetUserInfoAsync()
+        public static async Task<Dictionary<string, string>> GetUserInfoAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/users/me");
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
                 var values = new Dictionary<string, string>()
@@ -196,7 +190,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<List<Device>> GetDeviceListAsync()
+        public static async Task<List<Device>> GetDeviceListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/devices");
             if (response.IsSuccessStatusCode)
@@ -205,8 +199,8 @@ namespace PusherForWindows.Pusher
 
                 List<Device> devicesList = new List<Device>();
                 foreach (dynamic device in json["devices"])
-                    if((bool)device.active)
-                        devicesList.Add(new Device((string)device.iden, (string)device.nickname ));
+                    if ((bool)device.active)
+                        devicesList.Add(new Device((string)device.iden, (string)device.nickname));
 
                 return devicesList;
             }
@@ -214,7 +208,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<ObservableCollection<Push>> GetPushListAsync()
+        public static async Task<ObservableCollection<Push>> GetPushListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
             if (response.IsSuccessStatusCode)

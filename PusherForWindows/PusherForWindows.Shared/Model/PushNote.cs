@@ -1,13 +1,13 @@
 ﻿namespace PusherForWindows.Model
 {
-    class PushNote : Push
+    public class PushNote : Push
     {
         public string Body { get; set; }
 
-        public PushNote(string Iden, string Title, long Created, long Modified, string Body)
-            : base(Iden, Title, Created, Modified)
+        public PushNote(string iden, string title, long created, long modified, string body)
+            : base(iden, title, created, modified)
         {
-            this.Body = Body;
+            this.Body = body;
         }
     }
 }

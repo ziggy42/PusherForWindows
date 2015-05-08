@@ -1,25 +1,28 @@
-﻿
-namespace PusherForWindows.Model
+﻿namespace PusherForWindows.Model
 {
     public class Push
     {
         public string Iden { get; set; }
+
         public string Title { get; set; }
+
         public long Created { get; set; }
+        
         public long Modified { get; set; }
 
-        public Push(string Iden, string Title, long Created, long Modified)
+        public Push(string iden, string title, long created, long modified)
         {
-            this.Iden = Iden;
-            this.Title = Title;
-            this.Created = Created;
-            this.Modified = Modified;
+            this.Iden = iden;
+            this.Title = title;
+            this.Created = created;
+            this.Modified = modified;
         }
 
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is Push))
                 return false;
+
             return this.Iden.Equals(((Push)obj).Iden);
         }
 
