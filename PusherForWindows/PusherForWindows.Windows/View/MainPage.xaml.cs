@@ -2,14 +2,14 @@
 using PusherForWindows.Pusher;
 using PusherForWindows.View;
 using System;
-using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Windows.Networking.Connectivity;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace PusherForWindows
@@ -87,8 +87,8 @@ namespace PusherForWindows
             if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 pushDataSource.Populate();
-            
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
+
+            /*if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
             {
                 UserNameTextBlock.Text = (string)
                     Windows.Storage.ApplicationData.Current.LocalSettings.Values[PusherUtils.USER_NAME_KEY];
@@ -100,7 +100,7 @@ namespace PusherForWindows
                 Dictionary<string, string> info = await PusherUtils.GetUserInfoAsync();
                 UserNameTextBlock.Text = info[PusherUtils.USER_NAME_KEY];
                 UserProfileImage.Source = new BitmapImage(new Uri(info[PusherUtils.USER_PIC_URL_KEY]));
-            }
+            }*/
         }
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
@@ -128,6 +128,33 @@ namespace PusherForWindows
         private void ChooseDeviceButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ChooseDevicePage));
+        }
+
+        private void FilterMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var pushQuery = from push in pushDataSource.Items select push;
+
+            switch (((MenuFlyoutItem)sender).Tag.ToString())
+            {
+                case "links":
+                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushLink));
+                    break;
+                case "notes":
+                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushNote));
+                    break;
+                case "files":
+                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushFile));
+                    break;
+                case "images":
+                    pushQuery = pushQuery.Where((Push p) => (p.GetType() == typeof(PushFile)) &&
+                        (new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)p).MimeType).Success);
+                    break;
+                default:
+                    PushesListView.DataContext = pushDataSource;
+                    break;
+            }
+
+            PushesListView.DataContext = new PushDataSource(pushQuery.ToList());
         }
     }
 }

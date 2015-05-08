@@ -1,4 +1,5 @@
 ﻿using PusherForWindows.Pusher;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace PusherForWindows.Model
@@ -25,6 +26,14 @@ namespace PusherForWindows.Model
         public PushDataSource()
         {
 
+        }
+
+        public PushDataSource(IList<Push> pushes)
+        {
+            foreach (var p in pushes)
+            {
+                this.pushes.Add(p);
+            }
         }
 
         public async void Populate()

@@ -42,6 +42,7 @@
 
             <ListView
                 Grid.Column="0"
+                Margin="50, 0, 50, 0"
                 Name="DevicesListView"
                 ItemsSource="{Binding Devices}">
 

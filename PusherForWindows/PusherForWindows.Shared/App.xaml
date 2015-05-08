@@ -5,7 +5,7 @@
     xmlns:local="using:PusherForWindows">
     
     <Application.Resources>
-        <Style x:Key="HoverTextBlockStyle" TargetType="Button">
+        <Style x:Key="HoverTextButtonStyle" TargetType="Button">
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
             <Setter Property="FontWeight" Value="SemiLight"/>
             <Setter Property="FontSize" Value="22"/>
