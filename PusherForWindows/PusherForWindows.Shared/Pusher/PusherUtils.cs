@@ -16,7 +16,7 @@ namespace PusherForWindows.Pusher
         public static readonly string CLIENT_ID = "IfgaX7cNfg0bdIcXgoLmROL6xFlT9dgq";
         public static readonly string CLIENT_SECRET = "w6QmD8gtBtz9gcT6RcjJ9JtIwgP5KVRx";
         public static readonly string REDIRECT_URI = "http://andreapivetta.altervista.org";
-        public static readonly string LOGIN_KEY = "isuserloggedin";
+        public static readonly string LOGIN_KEY = "userloggedin";
         public static readonly string ACCESS_TOKEN_KEY = "token";
         public static readonly string USER_NAME_KEY = "name";
         public static readonly string USER_PIC_URL_KEY = "picurl";
@@ -57,6 +57,12 @@ namespace PusherForWindows.Pusher
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] =
                 redirect.Substring(redirect.IndexOf('=') + 1);
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
+        }
+
+        public static void DeleteAccessToken()
+        {
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] = null;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = false;
         }
 
         public static async Task<Push> PushNoteAsync(string message, string title = "", string device = "")
