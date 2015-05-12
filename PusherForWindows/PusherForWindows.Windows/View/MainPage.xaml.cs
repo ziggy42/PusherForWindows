@@ -110,6 +110,22 @@ namespace PusherForWindows
             this.Frame.Navigate(typeof(ChooseDevicePage), this.pushDataSource.Items);
         }
 
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(SearchTextBox.Text);
+            var pushQuery = from push in pushDataSource.Items select push;
+
+            if(string.IsNullOrEmpty(SearchTextBox.Text))
+            {
+                PushesListView.DataContext = this.pushDataSource;
+            }
+            else
+            {
+                var result = pushDataSource.Items.Where(item => !string.IsNullOrEmpty(item.Title) && item.Title.Contains(SearchTextBox.Text));
+                PushesListView.DataContext = new PushDataSource(result.ToList());
+            }
+        }
+
         private void FilterMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var pushQuery = from push in pushDataSource.Items select push;
