@@ -81,25 +81,11 @@ namespace PusherForWindows
             this.SetupAsync();
         }
 
-        private async void SetupAsync()
+        private void SetupAsync()
         {
             if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 this.pushDataSource.Populate();
-
-            /*if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(PusherUtils.USER_NAME_KEY))
-            {
-                UserNameTextBlock.Text = (string)
-                    Windows.Storage.ApplicationData.Current.LocalSettings.Values[PusherUtils.USER_NAME_KEY];
-                UserProfileImage.Source = new BitmapImage(new Uri(
-                    (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[PusherUtils.USER_PIC_URL_KEY]));
-            }
-            else
-            {
-                Dictionary<string, string> info = await PusherUtils.GetUserInfoAsync();
-                UserNameTextBlock.Text = info[PusherUtils.USER_NAME_KEY];
-                UserProfileImage.Source = new BitmapImage(new Uri(info[PusherUtils.USER_PIC_URL_KEY]));
-            }*/
         }
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
@@ -107,11 +93,6 @@ namespace PusherForWindows
             var flyout = new NewPushFlyout();
             flyout.NewPushSent += OnNewPush;
             flyout.ShowIndependent();
-        }
-
-        private void PushesListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            //TODO do something
         }
 
         public void OnNewPush(object sender, PushEventArgs e)
@@ -154,6 +135,11 @@ namespace PusherForWindows
             }
 
             PushesListView.DataContext = new PushDataSource(pushQuery.ToList());
+        }
+
+        private void PushesListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            
         }
     }
 }

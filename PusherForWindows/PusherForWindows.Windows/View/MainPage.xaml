@@ -15,7 +15,7 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-
+                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
             </Grid>
@@ -27,7 +27,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Foreground="Black" Text="{Binding Title, TargetNullValue='Link'}" Margin="15, 10, 15, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
+                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
+                <TextBlock Foreground="Black" Text="{Binding Title, TargetNullValue='Link'}" Margin="15, 8, 8, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1" FontSize="16"/>
             </Grid>
         </DataTemplate>
@@ -38,7 +39,8 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-
+                
+                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <Image Source="{Binding URL}" Grid.Row="2"/>
@@ -53,6 +55,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
+                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="2" FontSize="16"/>
@@ -81,11 +84,6 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <!--
-            <Image  Name="UserProfileImage" Source="Assets/MediumGray.png" Margin="50, 100, 50, 0" Grid.Row="0" VerticalAlignment="Top"/>
-            <TextBlock Name="UserNameTextBlock" FontSize="24" Margin="0, 10, 0, 0" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center"/>
-            -->
-
             <StackPanel VerticalAlignment="Center" Grid.Row="2">
                 <Button
                     Name="GetDeviceListButton"
@@ -93,14 +91,14 @@
                     Padding="10, 10, 10, 10"
                     HorizontalAlignment="Stretch"
                     Click="ChooseDeviceButton_Click"
-                    Content="Choose Device"/>
+                    Content="Push-To"/>
 
                 <Button
                     Name="FilterByButton"
                     Style="{StaticResource HoverTextButtonStyle}"
                     Padding="10, 10, 10, 10"
                     HorizontalAlignment="Stretch"
-                    Content="Filter List" >
+                    Content="Filter By" >
 
                     <Button.Flyout>
                         <MenuFlyout x:Name="FilterMenuFlyout"  Placement="Right">
@@ -126,10 +124,16 @@
                                 Click="FilterMenuFlyoutItem_Click"/>
                         </MenuFlyout>
                     </Button.Flyout>
-
                 </Button>
 
-                <Button 
+                <Button
+                    Name="SearchByButton"
+                    Style="{StaticResource HoverTextButtonStyle}"
+                    Padding="10, 10, 10, 10"
+                    HorizontalAlignment="Stretch"
+                    Content="Search By"/>
+
+                <Button
                     Name="RefreshButton"
                     Style="{StaticResource HoverTextButtonStyle}" 
                     Padding="10, 10, 10, 10" 
