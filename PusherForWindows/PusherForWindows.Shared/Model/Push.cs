@@ -12,24 +12,9 @@ namespace PusherForWindows.Model
 
         public long Created { get; set; }
 
-        public string CreatedString
-        {
-            get
-            {
-                return GetTimeSpanString(this.createdDateTime);
-            }
-        }
+        public string CreatedString { get; set; }
 
-        public string Modified
-        {
-            get
-            {
-                return GetTimeSpanString(this.modifiedDateTime);
-            }
-        }
-
-        private DateTime createdDateTime;
-        private DateTime modifiedDateTime;
+        public string ModifiedString { get; set; }
 
         public Push(string iden, string title, long created, long modified)
         {
@@ -38,11 +23,11 @@ namespace PusherForWindows.Model
             this.IsActive = true;
             this.Created = created;
 
-            this.createdDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
-                .AddSeconds(created).ToLocalTime();
+            this.CreatedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(created).ToLocalTime());
 
-            this.modifiedDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
-                .AddSeconds(modified).ToLocalTime();
+            this.ModifiedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(modified).ToLocalTime());
         }
 
         public Push(string iden, long created, long modified, bool isActive)
@@ -51,16 +36,16 @@ namespace PusherForWindows.Model
             this.IsActive = isActive;
             this.Created = created;
 
-            this.createdDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
-                .AddSeconds(created).ToLocalTime();
+            this.CreatedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(created).ToLocalTime());
 
-            this.modifiedDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
-                .AddSeconds(modified).ToLocalTime();
+            this.ModifiedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(modified).ToLocalTime());
         }
 
         private string GetTimeSpanString(DateTime date)
         {
-            TimeSpan span = DateTime.Now.Subtract(this.createdDateTime);
+            TimeSpan span = DateTime.Now.Subtract(date);
 
             if (span.Days > 365)
                 return date.ToString("more than a year ago");
