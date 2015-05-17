@@ -1,47 +1,68 @@
 ﻿using System;
+
 namespace PusherForWindows.Model
 {
-    public abstract class Push
+    public class Push
     {
         public string Iden { get; set; }
 
         public string Title { get; set; }
 
-        public string Created
+        public bool IsActive { get; set; }
+
+        public long Created { get; set; }
+
+        public string CreatedString
         {
             get
             {
-                return GetTimeSpanString(this.created);
+                return GetTimeSpanString(this.createdDateTime);
             }
         }
 
-        public string Modified { 
+        public string Modified
+        {
             get
             {
-                return GetTimeSpanString(this.modified);
+                return GetTimeSpanString(this.modifiedDateTime);
             }
         }
 
-        private DateTime created;
-        private DateTime modified;
+        private DateTime createdDateTime;
+        private DateTime modifiedDateTime;
 
         public Push(string iden, string title, long created, long modified)
         {
             this.Iden = iden;
             this.Title = title;
+            this.IsActive = true;
+            this.Created = created;
 
-            this.created = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+            this.createdDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
                 .AddSeconds(created).ToLocalTime();
 
-            this.modified = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+            this.modifiedDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(modified).ToLocalTime();
+        }
+
+        public Push(string iden, long created, long modified, bool isActive)
+        {
+            this.Iden = iden;
+            this.IsActive = isActive;
+            this.Created = created;
+
+            this.createdDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
+                .AddSeconds(created).ToLocalTime();
+
+            this.modifiedDateTime = (new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
                 .AddSeconds(modified).ToLocalTime();
         }
 
         private string GetTimeSpanString(DateTime date)
         {
-            TimeSpan span = DateTime.Now.Subtract(this.created);
+            TimeSpan span = DateTime.Now.Subtract(this.createdDateTime);
 
-            if(span.Days > 365)
+            if (span.Days > 365)
                 return date.ToString("more than a year ago");
             if (span.Days > 30)
                 return date.ToString("dd MMM");

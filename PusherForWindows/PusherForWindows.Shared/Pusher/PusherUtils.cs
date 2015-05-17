@@ -20,6 +20,7 @@ namespace PusherForWindows.Pusher
         public static readonly string ACCESS_TOKEN_KEY = "token";
         public static readonly string USER_NAME_KEY = "name";
         public static readonly string USER_PIC_URL_KEY = "picurl";
+        public static readonly string LAST_TIME_CHECKED_KEY = "lasttime";
 
         private static HttpClient client;
 
@@ -217,8 +218,10 @@ namespace PusherForWindows.Pusher
         public static async Task<ObservableCollection<Push>> GetPushListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
+
             if (response.IsSuccessStatusCode)
             {
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
                 var pushes = new ObservableCollection<Push>();
@@ -251,6 +254,59 @@ namespace PusherForWindows.Pusher
             }
 
             return null;
+        }
+
+        public async static Task<ObservableCollection<Push>> UpdatePushListAsync()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+            if (!localSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
+                return await GetPushListAsync();
+
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + localSettings[LAST_TIME_CHECKED_KEY]);
+            if (response.IsSuccessStatusCode)
+            {
+                localSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
+                dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+
+                var pushes = new ObservableCollection<Push>();
+                foreach (dynamic push in json["pushes"])
+                {
+                    if ((bool)push.active)
+                    {
+                        switch ((string)push.type)
+                        {
+                            case "note":
+                                pushes.Add(new PushNote(
+                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                    (string)push.body));
+                                break;
+                            case "link":
+                                pushes.Add(new PushLink(
+                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                                    (string)push.url));
+                                break;
+                            case "file":
+                                pushes.Add(new PushFile(
+                                     (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
+                                     (string)push.file_name, (string)push.file_type, (string)push.file_url));
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        pushes.Add(new Push((string)push.iden, (long)push.created, (long)push.modified, false));
+                    }
+                }
+
+                return pushes;
+            }
+
+            return null;
+        }
+
+        private static long GetUNIXTimeStamp()
+        {
+            return (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
     }
 }

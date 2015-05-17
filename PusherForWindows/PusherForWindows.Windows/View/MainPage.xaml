@@ -15,7 +15,7 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
+                <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
             </Grid>
@@ -27,7 +27,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
+                <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title, TargetNullValue='Link'}" Margin="15, 8, 8, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1" FontSize="16"/>
             </Grid>
@@ -39,8 +39,8 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                
-                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
+
+                <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <Image Source="{Binding URL}" Grid.Row="2"/>
@@ -55,7 +55,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Foreground="Black" Text="{Binding Created}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
+                <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="2" FontSize="16"/>

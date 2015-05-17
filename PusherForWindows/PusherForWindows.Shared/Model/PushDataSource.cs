@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Collections.ObjectModel;
 using PusherForWindows.Pusher;
 
@@ -45,10 +46,36 @@ namespace PusherForWindows.Model
             }
         }
 
-        public void Refresh()
+        public async void Refresh()
         {
-            this.pushes.Clear();
-            this.Populate();
+            var updatedPushes = await PusherUtils.UpdatePushListAsync();
+            foreach(var push in updatedPushes)
+            {
+                var index = this.pushes.IndexOf(push);
+                if(index > -1)
+                {
+                    if (push.IsActive)
+                        this.pushes[index] = push;
+                    else
+                        this.pushes.RemoveAt(index);
+                }
+                else
+                {
+                    this.InserFirst(push);
+                }
+            }
+        }
+
+        private void InserFirst(Push push)
+        {
+            for (int i = 0; i < this.pushes.Count; i++)
+            {
+                if (push.Created > this.pushes[i].Created)
+                {
+                    this.pushes.Insert(i, push);
+                    break;
+                }
+            }
         }
     }
 }
