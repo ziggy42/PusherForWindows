@@ -304,6 +304,12 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
+        public async static Task<Boolean> DeletePushAsync(Push push)
+        {
+            var response = await Client.DeleteAsync("https://api.pushbullet.com/v2/pushes/" + push.Iden);
+            return response.IsSuccessStatusCode;
+        }
+
         private static long GetUNIXTimeStamp()
         {
             return (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;

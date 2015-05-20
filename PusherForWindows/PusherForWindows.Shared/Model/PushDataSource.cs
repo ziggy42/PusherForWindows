@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Collections.ObjectModel;
 using PusherForWindows.Pusher;
 
@@ -26,7 +25,7 @@ namespace PusherForWindows.Model
         }
 
         public PushDataSource()
-        {   
+        {
         }
 
         public PushDataSource(IList<Push> pushes)
@@ -49,10 +48,10 @@ namespace PusherForWindows.Model
         public async void Refresh()
         {
             var updatedPushes = await PusherUtils.UpdatePushListAsync();
-            foreach(var push in updatedPushes)
+            foreach (var push in updatedPushes)
             {
                 var index = this.pushes.IndexOf(push);
-                if(index > -1)
+                if (index > -1)
                 {
                     if (push.IsActive)
                         this.pushes[index] = push;
@@ -61,7 +60,8 @@ namespace PusherForWindows.Model
                 }
                 else
                 {
-                    this.InserFirst(push);
+                    if (push.IsActive)
+                        this.InserFirst(push);
                 }
             }
         }

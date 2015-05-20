@@ -10,7 +10,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="pushNoteTemplate">
-            <Grid Background="White">
+            <Grid Background="White" Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -18,10 +18,19 @@
                 <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
+
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem 
+                            Text="Delete" 
+                            Tag="delete"
+                            Click="MenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="pushLinkTemplate">
-            <Grid Background="White">
+            <Grid Background="White" Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -30,10 +39,19 @@
                 <TextBlock Foreground="Black" Text="{Binding CreatedString}" Margin="15, 10, 10, 0" FontSize="16" FontWeight="Light" Grid.Row="0" HorizontalAlignment="Right"/>
                 <TextBlock Foreground="Black" Text="{Binding Title, TargetNullValue='Link'}" Margin="15, 8, 8, 0" FontSize="20" FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="1" FontSize="16"/>
+
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem 
+                            Text="Delete" 
+                            Tag="delete"
+                            Click="MenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="pushImageTemplate">
-            <Grid Background="White">
+            <Grid Background="White"  Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -44,11 +62,23 @@
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <Image Source="{Binding URL}" Grid.Row="2"/>
+
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem
+                            Text="Open"
+                            Tag="openImage"/>
+                        <MenuFlyoutItem 
+                            Text="Delete" 
+                            Tag="delete"
+                            Click="MenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="pushFileTemplate">
-            <Grid Background="White">
+            <Grid Background="White" Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -59,6 +89,15 @@
                 <TextBlock Foreground="Black" Text="{Binding Title}" Margin="15, 10, 15, 0" FontSize="20"  FontWeight="SemiBold" Grid.Row="0" TextWrapping="Wrap"/>
                 <TextBlock Foreground="Black" Text="{Binding Body}" Margin="15, 0, 15, 10" FontSize="16" Grid.Row="1" TextWrapping="Wrap"/>
                 <HyperlinkButton NavigateUri="{Binding URL}" Content="{Binding URL}" Grid.Row="2" FontSize="16"/>
+
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem 
+                            Text="Delete" 
+                            Tag="delete"
+                            Click="MenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
             </Grid>
         </DataTemplate>
 
@@ -150,7 +189,7 @@
                     Padding="10, 10, 10, 10" 
                     HorizontalAlignment="Stretch"
                     Click="RefreshButton_Click"
-                    Content="Refresh List" />
+                    Content="Refresh" />
 
                 <Button
                     Name="LogoutButton"
@@ -167,10 +206,8 @@
             Grid.Column="1" 
             Background="#DCDCDC"
             SelectionMode="None"
-            IsItemClickEnabled="True"
             ItemTemplateSelector="{StaticResource PushTemplateSelector}"
-            ItemsSource="{Binding Items}"
-            ItemClick="PushesListView_ItemClick">
+            ItemsSource="{Binding Items}">
 
             <ListView.Header >
                 <StackPanel Height="60"/>

@@ -11,6 +11,8 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace PusherForWindows
 {
@@ -115,7 +117,7 @@ namespace PusherForWindows
             System.Diagnostics.Debug.WriteLine(SearchTextBox.Text);
             var pushQuery = from push in pushDataSource.Items select push;
 
-            if(string.IsNullOrEmpty(SearchTextBox.Text))
+            if (string.IsNullOrEmpty(SearchTextBox.Text))
             {
                 PushesListView.DataContext = this.pushDataSource;
             }
@@ -156,7 +158,8 @@ namespace PusherForWindows
         private async void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new MessageDialog("Are you sure you want to logout?");
-            dialog.Commands.Add(new UICommand("Logout", (command) => {
+            dialog.Commands.Add(new UICommand("Logout", (command) =>
+            {
                 PusherUtils.DeleteAccessToken();
                 App.Current.Exit();
             }));
@@ -164,9 +167,22 @@ namespace PusherForWindows
             var asyncOperation = await dialog.ShowAsync();
         }
 
-        private void PushesListView_ItemClick(object sender, ItemClickEventArgs e)
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            Push push = senderElement.DataContext as Push;
+
+            if (await PusherUtils.DeletePushAsync(push))
+            {
+                this.pushDataSource.Remove(push);
+            }
         }
     }
 }
