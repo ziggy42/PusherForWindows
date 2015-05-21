@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.Generic;
 
 namespace PusherForWindows.View
 {
@@ -20,12 +21,13 @@ namespace PusherForWindows.View
         private StorageFile file;
         private ObservableCollection<Push> pushes;
         private ObservableCollection<Device> devices = new ObservableCollection<Device>();
-        
-        public ObservableCollection<Device> Devices 
-        { 
-            get { 
-                return this.devices; 
-            } 
+
+        public ObservableCollection<Device> Devices
+        {
+            get
+            {
+                return this.devices;
+            }
         }
 
         public ChooseDevicePage()
@@ -83,25 +85,28 @@ namespace PusherForWindows.View
                     SendPushButton.IsEnabled = false;
                     FilePickerButton.IsEnabled = false;
 
-                    Push newPush;
+                    var itemsToSend = new List<Push>();
                     if (DevicesListView.SelectedItems.Count > 0)
                     {
-                        newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title,
+                        foreach (var selectedDevice in DevicesListView.SelectedItems)
+                        {
+                            itemsToSend.Add((this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title,
                             ((Device)DevicesListView.SelectedItems[0]).Iden) : await PusherUtils.PushNoteAsync(body, title,
-                            ((Device)DevicesListView.SelectedItems[0]).Iden);
+                            ((Device)DevicesListView.SelectedItems[0]).Iden));
+                        }
                     }
                     else
                     {
-                        newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
-                            await PusherUtils.PushNoteAsync(body, title);
+                        itemsToSend.Add((this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
+                            await PusherUtils.PushNoteAsync(body, title));
                     }
 
-                    if (newPush != null)
-                    {
-                        TitleTextBox.Text = string.Empty;
-                        BodyTextBox.Text = string.Empty;
-                        FileImage.Source = null;
+                    TitleTextBox.Text = string.Empty;
+                    BodyTextBox.Text = string.Empty;
+                    FileImage.Source = null;
 
+                    foreach (var newPush in itemsToSend)
+                    {
                         ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
                         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
 
@@ -115,13 +120,6 @@ namespace PusherForWindows.View
                         ToastNotificationManager.CreateToastNotifier().Show(toast);
 
                         this.pushes.Insert(0, newPush);
-                    }
-                    else
-                    {
-                        var messageDialog = new Windows.UI.Popups.MessageDialog(
-                            "Something wrong happened here but I don't know anything more...");
-                        messageDialog.DefaultCommandIndex = 1;
-                        await messageDialog.ShowAsync();
                     }
                 }
                 else

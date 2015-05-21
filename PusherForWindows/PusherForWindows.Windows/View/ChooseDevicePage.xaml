@@ -44,6 +44,7 @@
                 Grid.Column="0"
                 Margin="50, 0, 50, 0"
                 Name="DevicesListView"
+                SelectionMode="Multiple"
                 ItemsSource="{Binding Devices}">
 
                 <ListView.ItemTemplate>
