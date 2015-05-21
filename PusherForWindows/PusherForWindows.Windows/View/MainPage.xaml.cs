@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.System;
 
 namespace PusherForWindows
 {
@@ -174,15 +175,21 @@ namespace PusherForWindows
             flyoutBase.ShowAt(senderElement);
         }
 
-        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private async void DeleteMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
-            Push push = senderElement.DataContext as Push;
-
+            var push = senderElement.DataContext as Push;
             if (await PusherUtils.DeletePushAsync(push))
-            {
                 this.pushDataSource.Remove(push);
-            }
+        }
+
+        private async void OpenMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            if (senderElement.DataContext is PushLink)
+                await Launcher.LaunchUriAsync((senderElement.DataContext as PushLink).URL);
+            else
+                await Launcher.LaunchUriAsync((senderElement.DataContext as PushFile).URL);
         }
     }
 }

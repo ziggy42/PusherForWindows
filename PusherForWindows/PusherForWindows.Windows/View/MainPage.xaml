@@ -24,7 +24,7 @@
                         <MenuFlyoutItem 
                             Text="Delete" 
                             Tag="delete"
-                            Click="MenuFlyoutItem_Click"/>
+                            Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
             </Grid>
@@ -42,10 +42,14 @@
 
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem
+                            Text="Open"
+                            Tag="openImage"
+                            Click="OpenMenuFlyoutItem_Click"/>
                         <MenuFlyoutItem 
                             Text="Delete" 
                             Tag="delete"
-                            Click="MenuFlyoutItem_Click"/>
+                            Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
             </Grid>
@@ -67,11 +71,12 @@
                     <MenuFlyout Placement="Right">
                         <MenuFlyoutItem
                             Text="Open"
-                            Tag="openImage"/>
+                            Tag="openImage"
+                            Click="OpenMenuFlyoutItem_Click"/>
                         <MenuFlyoutItem 
                             Text="Delete" 
                             Tag="delete"
-                            Click="MenuFlyoutItem_Click"/>
+                            Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
             </Grid>
@@ -92,10 +97,14 @@
 
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Right">
+                        <MenuFlyoutItem
+                            Text="Open"
+                            Tag="openImage"
+                            Click="OpenMenuFlyoutItem_Click"/>
                         <MenuFlyoutItem 
                             Text="Delete" 
                             Tag="delete"
-                            Click="MenuFlyoutItem_Click"/>
+                            Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
                 </FlyoutBase.AttachedFlyout>
             </Grid>
