@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using PusherForWindows.Pusher;
+using Windows.UI.Xaml;
 
 namespace PusherForWindows.Model
 {
@@ -38,11 +39,13 @@ namespace PusherForWindows.Model
 
         public async void Populate()
         {
-            var newPushes = await PusherUtils.GetPushListAsync();
+            var newPushes = new ObservableCollection<Push>(await ((App)Application.Current).GetAllPushes());
             foreach (var p in newPushes)
             {
-                this.pushes.Add(p);
+                this.InserFirst(p);
             }
+
+            this.Refresh();
         }
 
         public async void Refresh()
@@ -68,13 +71,22 @@ namespace PusherForWindows.Model
 
         private void InserFirst(Push push)
         {
-            for (int i = 0; i < this.pushes.Count; i++)
+            if (this.pushes.Count == 0)
             {
-                if (push.Created > this.pushes[i].Created)
+                this.Add(push);
+            }
+            else
+            {
+                for (int i = 0; i < this.pushes.Count; i++)
                 {
-                    this.pushes.Insert(i, push);
-                    break;
+                    if (push.Created > this.pushes[i].Created)
+                    {
+                        this.pushes.Insert(i, push);
+                        break;
+                    }
                 }
+
+                this.pushes.Add(push);
             }
         }
     }

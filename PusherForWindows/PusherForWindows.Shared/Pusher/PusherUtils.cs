@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
 using PusherForWindows.Model;
+using Windows.UI.Xaml;
 
 namespace PusherForWindows.Pusher
 {
@@ -88,15 +89,21 @@ namespace PusherForWindows.Pusher
             if (response.IsSuccessStatusCode)
             {
                 dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+                Push currentPush = null;
                 switch ((string)push.type)
                 {
                     case "note":
-                        return new PushNote((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                        currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                                 (string)push.body);
+                        break;
                     case "link":
-                        return new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
+                        currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
                             (string)push.url);
+                        break;
                 }
+
+                ((App)Application.Current).InsertPush(currentPush);
+                return currentPush;
             }
 
             return null;
@@ -160,8 +167,10 @@ namespace PusherForWindows.Pusher
                 if (response.IsSuccessStatusCode)
                 {
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-                    return new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, (long)push.modified,
+                    var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, (long)push.modified,
                                 (string)push.file_name, (string)push.file_type, (string)push.file_url);
+                    ((App)Application.Current).InsertPush(currentPush);
+                    return currentPush;
                 }
             }
 
@@ -229,24 +238,27 @@ namespace PusherForWindows.Pusher
                 {
                     if ((bool)push.active)
                     {
+                        Push currentPush = null;
                         switch ((string)push.type)
                         {
                             case "note":
-                                pushes.Add(new PushNote(
+                                currentPush = new PushNote(
                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.body));
+                                    (string)push.body);
                                 break;
                             case "link":
-                                pushes.Add(new PushLink(
+                                currentPush = new PushLink(
                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.url));
+                                    (string)push.url);
                                 break;
                             case "file":
-                                pushes.Add(new PushFile(
+                                currentPush = new PushFile(
                                      (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
-                                     (string)push.file_name, (string)push.file_type, (string)push.file_url));
+                                     (string)push.file_name, (string)push.file_type, (string)push.file_url);
                                 break;
                         }
+                        pushes.Add(currentPush);
+                        ((App)Application.Current).InsertPush(currentPush);
                     }
                 }
 
@@ -271,31 +283,35 @@ namespace PusherForWindows.Pusher
                 var pushes = new ObservableCollection<Push>();
                 foreach (dynamic push in json["pushes"])
                 {
+                    Push currentPush = null;
                     if ((bool)push.active)
                     {
                         switch ((string)push.type)
                         {
                             case "note":
-                                pushes.Add(new PushNote(
+                                currentPush = new PushNote(
                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.body));
+                                    (string)push.body);
                                 break;
                             case "link":
-                                pushes.Add(new PushLink(
+                                currentPush = new PushLink(
                                     (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.url));
+                                    (string)push.url);
                                 break;
                             case "file":
-                                pushes.Add(new PushFile(
+                                currentPush = new PushFile(
                                      (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
-                                     (string)push.file_name, (string)push.file_type, (string)push.file_url));
+                                     (string)push.file_name, (string)push.file_type, (string)push.file_url);
                                 break;
                         }
                     }
                     else
                     {
-                        pushes.Add(new Push((string)push.iden, (long)push.created, (long)push.modified, false));
+                        currentPush = new Push((string)push.iden, (long)push.created, (long)push.modified, false);
                     }
+
+                    pushes.Add(currentPush);
+                    ((App)Application.Current).UpdatePush(currentPush);
                 }
 
                 return pushes;
@@ -307,6 +323,10 @@ namespace PusherForWindows.Pusher
         public async static Task<Boolean> DeletePushAsync(Push push)
         {
             var response = await Client.DeleteAsync("https://api.pushbullet.com/v2/pushes/" + push.Iden);
+
+            if (response.IsSuccessStatusCode)
+                ((App)Application.Current).DeletePush(push);
+
             return response.IsSuccessStatusCode;
         }
 

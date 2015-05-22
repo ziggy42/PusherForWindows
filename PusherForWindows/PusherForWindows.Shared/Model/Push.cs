@@ -12,6 +12,8 @@ namespace PusherForWindows.Model
 
         public long Created { get; set; }
 
+        public long Modified { get; set; }
+
         public string CreatedString { get; set; }
 
         public string ModifiedString { get; set; }
@@ -22,6 +24,7 @@ namespace PusherForWindows.Model
             this.Title = title;
             this.IsActive = true;
             this.Created = created;
+            this.Modified = modified;
 
             this.CreatedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
                 .AddSeconds(created).ToLocalTime());
@@ -35,6 +38,7 @@ namespace PusherForWindows.Model
             this.Iden = iden;
             this.IsActive = isActive;
             this.Created = created;
+            this.Modified = modified;
 
             this.CreatedString = GetTimeSpanString((new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc))
                 .AddSeconds(created).ToLocalTime());

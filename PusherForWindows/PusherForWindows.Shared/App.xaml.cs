@@ -1,50 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
+using SQLite;
+using PusherForWindows.Model;
+using System.Threading.Tasks;
 
-// Il modello di applicazione vuota è documentato all'indirizzo http://go.microsoft.com/fwlink/?LinkId=234227
 
 namespace PusherForWindows
 {
-    /// <summary>
-    /// Fornisci un comportamento specifico dell'applicazione in supplemento alla classe Application predefinita.
-    /// </summary>
     public sealed partial class App : Application
     {
+
+        private static readonly string DB_NAME = "DBPush";
+
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
 
-        /// <summary>
-        /// Inizializza l'oggetto Application singleton. Si tratta della prima riga del codice creato
-        /// eseguita e, come tale, corrisponde all'equivalente logico di main() o WinMain().
-        /// </summary>
         public App()
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+
+            CreateDB();
         }
 
-        /// <summary>
-        /// Richiamato quando l'applicazione viene avviata normalmente dall'utente.  All'avvio dell'applicazione
-        /// verranno utilizzati altri punti di ingresso per aprire un file specifico, per visualizzare
-        /// risultati di ricerche e così via.
-        /// </summary>
-        /// <param name="e">Dettagli sulla richiesta e il processo di avvio.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
@@ -56,14 +39,10 @@ namespace PusherForWindows
 
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // Non ripetere l'inizializzazione dell'applicazione se la finestra già dispone di contenuto,
-            // assicurarsi solo che la finestra sia attiva
             if (rootFrame == null)
             {
-                // Creare un frame che agisca da contesto di navigazione e passare alla prima pagina
                 rootFrame = new Frame();
 
-                // TODO: modificare questo valore su una dimensione di cache appropriata per l'applicazione
                 rootFrame.CacheSize = 1;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -71,7 +50,6 @@ namespace PusherForWindows
                     // TODO: Caricare lo stato dall'applicazione sospesa in precedenza
                 }
 
-                // Posizionare il frame nella finestra corrente
                 Window.Current.Content = rootFrame;
             }
 
@@ -92,16 +70,12 @@ namespace PusherForWindows
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
 
-                // Quando lo stack di navigazione non viene ripristinato, esegui la navigazione alla prima pagina,
-                // configurando la nuova pagina per passare le informazioni richieste come parametro di
-                // navigazione
                 if (!rootFrame.Navigate(typeof(MainPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
             }
 
-            // Assicurarsi che la finestra corrente sia attiva
             Window.Current.Activate();
         }
 
@@ -119,19 +93,114 @@ namespace PusherForWindows
         }
 #endif
 
-        /// <summary>
-        /// Richiamato quando l'esecuzione dell'applicazione viene sospesa.  Lo stato dell'applicazione viene salvato
-        /// senza che sia noto se l'applicazione verrà terminata o ripresa con il contenuto
-        /// della memoria ancora integro.
-        /// </summary>
-        /// <param name="sender">Origine della richiesta di sospensione.</param>
-        /// <param name="e">Dettagli relativi alla richiesta di sospensione.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 
-            // TODO: Salvare lo stato dell'applicazione e interrompere qualsiasi attività in background
             deferral.Complete();
+        }
+
+        public async void CreateDB()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DB_NAME);
+            await conn.CreateTableAsync<PushEntry>();
+        }
+
+        public async void InsertPush(Push push)
+        {
+            var conn = new SQLiteAsyncConnection(DB_NAME);
+            await conn.InsertAsync(GetPushEntryFromPush(push));
+        }
+
+        public async void DeletePush(Push push)
+        {
+            var conn = new SQLiteAsyncConnection(DB_NAME);
+            await conn.DeleteAsync(GetPushEntryFromPush(push));
+        }
+
+        public async void UpdatePush(Push push)
+        {
+            var conn = new SQLiteAsyncConnection(DB_NAME);
+            await conn.UpdateAsync(GetPushEntryFromPush(push));
+        }
+
+        public async Task<IList<Push>> GetAllPushes()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DB_NAME);
+
+            var result = await (conn.Table<PushEntry>()).ToListAsync();
+
+            IList<Push> pushes = new List<Push>();
+            foreach(PushEntry pushEntry in result)
+            {
+                switch(pushEntry.Type)
+                {
+                    case TYPE.FILE:
+                        pushes.Add(new PushFile(pushEntry.Iden, pushEntry.Title, pushEntry.Body, pushEntry.Created, 
+                            pushEntry.Modified, pushEntry.FileName, pushEntry.MimeType, pushEntry.Url));
+                        break;
+                    case TYPE.LINK:
+                        pushes.Add(new PushLink(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified, 
+                            pushEntry.Url));
+                        break;
+                    case TYPE.NOTE:
+                        pushes.Add(new PushNote(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified,
+                            pushEntry.Body));
+                        break;
+                }
+            }
+
+            return pushes;
+        }
+
+        private PushEntry GetPushEntryFromPush(Push push)
+        {
+            PushEntry entry = new PushEntry()
+            {
+                Iden = push.Iden,
+                Title = push.Title,
+                Created = push.Created,
+                Modified = push.Modified,
+            };
+
+            if (push is PushFile)
+            {
+                entry.Type = TYPE.FILE;
+                entry.FileName = ((PushFile)push).FileName;
+                entry.MimeType = ((PushFile)push).MimeType;
+                entry.Url = ((PushFile)push).URL.ToString();
+            }
+            else if (push is PushNote)
+            {
+                entry.Type = TYPE.NOTE;
+                entry.Body = ((PushNote)push).Body;
+            }
+            else if (push is PushLink)
+            {
+                entry.Type = TYPE.LINK;
+                entry.Url = ((PushLink)push).URL.ToString();
+            }
+
+            return entry;
+        }
+
+        public enum TYPE { FILE, NOTE, LINK }
+
+        public class PushEntry
+        {
+            [SQLite.PrimaryKey, SQLite.NotNull]
+            public string Iden { get; set; }
+            public string Title { get; set; }
+            [SQLite.NotNull]
+            public long Created { get; set; }
+            [SQLite.NotNull]
+            public long Modified { get; set; }
+            [SQLite.NotNull]
+            public TYPE Type { get; set; }
+            public string FileName { get; set; }
+            public string MimeType { get; set; }
+            public string Body { get; set; }
+            public string Url { get; set; }
         }
     }
 }
