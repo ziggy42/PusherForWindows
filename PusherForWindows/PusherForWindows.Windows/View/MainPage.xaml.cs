@@ -91,7 +91,7 @@ namespace PusherForWindows
                 this.pushDataSource.Populate();
         }
 
-        private void PushButton_Click(object sender, RoutedEventArgs e)
+        private void FastPushButton_Click(object sender, RoutedEventArgs e)
         {
             var flyout = new NewPushFlyout();
             flyout.NewPushSent += OnNewPush;
@@ -108,7 +108,7 @@ namespace PusherForWindows
             this.pushDataSource.Refresh();
         }
 
-        private void ChooseDeviceButton_Click(object sender, RoutedEventArgs e)
+        private void PushButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ChooseDevicePage), this.pushDataSource.Items);
         }
