@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace PusherForWindows.View
 {
-    public sealed partial class ChooseDevicePage : Page
+    public sealed partial class PushToPage : Page
     {
         private StorageFile file;
         private ObservableCollection<Push> pushes;
@@ -30,7 +30,7 @@ namespace PusherForWindows.View
             }
         }
 
-        public ChooseDevicePage()
+        public PushToPage()
         {
             this.InitializeComponent();
             this.DevicesListView.DataContext = this;

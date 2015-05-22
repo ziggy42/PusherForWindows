@@ -13,13 +13,13 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace PusherForWindows
 {
-    public sealed partial class NewPushFlyout : SettingsFlyout
+    public sealed partial class FastPushFlyout : SettingsFlyout
     {
         private StorageFile file;
 
         public event EventHandler<PushEventArgs> NewPushSent;
 
-        public NewPushFlyout()
+        public FastPushFlyout()
         {
             this.InitializeComponent();
         }

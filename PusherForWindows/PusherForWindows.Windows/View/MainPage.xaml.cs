@@ -93,7 +93,7 @@ namespace PusherForWindows
 
         private void FastPushButton_Click(object sender, RoutedEventArgs e)
         {
-            var flyout = new NewPushFlyout();
+            var flyout = new FastPushFlyout();
             flyout.NewPushSent += OnNewPush;
             flyout.ShowIndependent();
         }
@@ -110,7 +110,7 @@ namespace PusherForWindows
 
         private void PushButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ChooseDevicePage), this.pushDataSource.Items);
+            this.Frame.Navigate(typeof(PushToPage), this.pushDataSource.Items);
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)

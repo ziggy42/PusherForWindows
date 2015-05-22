@@ -104,14 +104,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="View\ChooseDevicePage.xaml.cs">
-      <DependentUpon>ChooseDevicePage.xaml</DependentUpon>
+    <Compile Include="View\PushToPage.xaml.cs">
+      <DependentUpon>PushToPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\NewPushFlyout.xaml.cs">
-      <DependentUpon>NewPushFlyout.xaml</DependentUpon>
+    <Compile Include="View\FastPushFlyout.xaml.cs">
+      <DependentUpon>FastPushFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -129,7 +129,7 @@
     <Content Include="Assets\StoreLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\ChooseDevicePage.xaml">
+    <Page Include="View\PushToPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -137,7 +137,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\NewPushFlyout.xaml">
+    <Page Include="View\FastPushFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
