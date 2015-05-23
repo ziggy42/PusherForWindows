@@ -115,7 +115,7 @@ namespace PusherForWindows
         public async void DeletePush(Push push)
         {
             var conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.DeleteAsync(GetPushEntryFromPush(push));
+            await conn.ExecuteAsync("DELETE FROM PushEntry WHERE Iden = '" + push.Iden + "';");
         }
 
         public async void UpdatePush(Push push)
@@ -131,16 +131,16 @@ namespace PusherForWindows
             var result = await (conn.Table<PushEntry>()).ToListAsync();
 
             IList<Push> pushes = new List<Push>();
-            foreach(PushEntry pushEntry in result)
+            foreach (PushEntry pushEntry in result)
             {
-                switch(pushEntry.Type)
+                switch (pushEntry.Type)
                 {
                     case TYPE.FILE:
-                        pushes.Add(new PushFile(pushEntry.Iden, pushEntry.Title, pushEntry.Body, pushEntry.Created, 
+                        pushes.Add(new PushFile(pushEntry.Iden, pushEntry.Title, pushEntry.Body, pushEntry.Created,
                             pushEntry.Modified, pushEntry.FileName, pushEntry.MimeType, pushEntry.Url));
                         break;
                     case TYPE.LINK:
-                        pushes.Add(new PushLink(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified, 
+                        pushes.Add(new PushLink(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified,
                             pushEntry.Url));
                         break;
                     case TYPE.NOTE:
