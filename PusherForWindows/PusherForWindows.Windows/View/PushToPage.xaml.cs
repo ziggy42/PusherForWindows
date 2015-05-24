@@ -86,19 +86,19 @@ namespace PusherForWindows.View
                     FilePickerButton.IsEnabled = false;
 
                     var itemsToSend = new List<Push>();
-                    if (DevicesListView.SelectedItems.Count > 0)
-                    {
-                        foreach (var selectedDevice in DevicesListView.SelectedItems)
-                        {
-                            itemsToSend.Add((this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title,
-                            ((Device)DevicesListView.SelectedItems[0]).Iden) : await PusherUtils.PushNoteAsync(body, title,
-                            ((Device)DevicesListView.SelectedItems[0]).Iden));
-                        }
-                    }
-                    else
+                    if(DevicesListView.SelectedItems.Count == 0 || DevicesListView.SelectedItems.Count == this.Devices.Count)
                     {
                         itemsToSend.Add((this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
                             await PusherUtils.PushNoteAsync(body, title));
+                    }
+                    else
+                    {
+                        for (var i = 0; i < DevicesListView.SelectedItems.Count; i++ )
+                        {
+                            itemsToSend.Add((this.file != null) ?
+                                    await PusherUtils.PushFileAsync(this.file, body, title, ((Device)DevicesListView.SelectedItems[i]).Iden) :
+                                    await PusherUtils.PushNoteAsync(body, title, ((Device)DevicesListView.SelectedItems[i]).Iden));
+                        }
                     }
 
                     TitleTextBox.Text = string.Empty;
