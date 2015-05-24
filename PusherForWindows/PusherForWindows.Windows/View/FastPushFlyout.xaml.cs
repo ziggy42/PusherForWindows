@@ -100,10 +100,6 @@ namespace PusherForWindows
                 FileImage.Source = bitmapImage;
                 this.ShowIndependent();
             }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Operazione cancellata");
-            }
         }
 
         private void OnNewPushSent(Push newPush)

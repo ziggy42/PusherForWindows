@@ -23,10 +23,8 @@ namespace PusherForWindows.Model
                 return this.PushLinkTemplate;
 
             if (item is PushFile)
-                if ((new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)item).MimeType).Success)
-                    return this.PushImageTemplate;
-                else
-                    return this.PushFileTemplate;
+                return ((new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)item).MimeType).Success) ?
+                    this.PushImageTemplate : this.PushFileTemplate;
 
             return base.SelectTemplateCore(item, container);
         }

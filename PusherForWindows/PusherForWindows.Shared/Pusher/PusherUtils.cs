@@ -93,12 +93,12 @@ namespace PusherForWindows.Pusher
                 switch ((string)push.type)
                 {
                     case "note":
-                        currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                (string)push.body);
+                        currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                            (long)push.modified, (string)push.body);
                         break;
                     case "link":
-                        currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                            (string)push.url);
+                        currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                            (long)push.modified, (string)push.url);
                         break;
                 }
 
@@ -167,8 +167,8 @@ namespace PusherForWindows.Pusher
                 if (response.IsSuccessStatusCode)
                 {
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-                    var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, (long)push.modified,
-                                (string)push.file_name, (string)push.file_type, (string)push.file_url);
+                    var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, 
+                        (long)push.modified, (string)push.file_name, (string)push.file_type, (string)push.file_url);
                     ((App)Application.Current).InsertPush(currentPush);
                     return currentPush;
                 }
@@ -242,19 +242,17 @@ namespace PusherForWindows.Pusher
                         switch ((string)push.type)
                         {
                             case "note":
-                                currentPush = new PushNote(
-                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.body);
+                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                                    (long)push.modified, (string)push.body);
                                 break;
                             case "link":
-                                currentPush = new PushLink(
-                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.url);
+                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                                    (long)push.modified, (string)push.url);
                                 break;
                             case "file":
-                                currentPush = new PushFile(
-                                     (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
-                                     (string)push.file_name, (string)push.file_type, (string)push.file_url);
+                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, 
+                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type, 
+                                    (string)push.file_url);
                                 break;
                         }
                         pushes.Add(currentPush);
@@ -274,7 +272,8 @@ namespace PusherForWindows.Pusher
             if (!localSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
                 return await GetPushListAsync();
 
-            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + localSettings[LAST_TIME_CHECKED_KEY]);
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + 
+                localSettings[LAST_TIME_CHECKED_KEY]);
             if (response.IsSuccessStatusCode)
             {
                 localSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
@@ -289,19 +288,17 @@ namespace PusherForWindows.Pusher
                         switch ((string)push.type)
                         {
                             case "note":
-                                currentPush = new PushNote(
-                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.body);
+                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                                    (long)push.modified, (string)push.body);
                                 break;
                             case "link":
-                                currentPush = new PushLink(
-                                    (string)push.iden, (string)push.title, (long)push.created, (long)push.modified,
-                                    (string)push.url);
+                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                                    (long)push.modified, (string)push.url);
                                 break;
                             case "file":
-                                currentPush = new PushFile(
-                                     (string)push.iden, (string)push.title, (string)push.title, (long)push.created, (long)push.modified,
-                                     (string)push.file_name, (string)push.file_type, (string)push.file_url);
+                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, 
+                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type, 
+                                    (string)push.file_url);
                                 break;
                         }
                     }

@@ -81,7 +81,6 @@
                 </FlyoutBase.AttachedFlyout>
             </Grid>
         </DataTemplate>
-
         <DataTemplate x:Key="pushFileTemplate">
             <Grid Background="White" Tapped="Grid_Tapped">
                 <Grid.RowDefinitions>
@@ -110,7 +109,7 @@
             </Grid>
         </DataTemplate>
 
-        <shared:PushTemplateSelector 
+        <shared:PushTemplateSelector
             x:Key="PushTemplateSelector" 
             PushNoteTemplate="{StaticResource pushNoteTemplate}"
             PushLinkTemplate="{StaticResource pushLinkTemplate}"
