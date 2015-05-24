@@ -93,11 +93,11 @@ namespace PusherForWindows.View
                     }
                     else
                     {
-                        for (var i = 0; i < DevicesListView.SelectedItems.Count; i++ )
+                        foreach(var device in DevicesListView.SelectedItems)
                         {
                             itemsToSend.Add((this.file != null) ?
-                                    await PusherUtils.PushFileAsync(this.file, body, title, ((Device)DevicesListView.SelectedItems[i]).Iden) :
-                                    await PusherUtils.PushNoteAsync(body, title, ((Device)DevicesListView.SelectedItems[i]).Iden));
+                                    await PusherUtils.PushFileAsync(this.file, body, title, ((Device)device).Iden) :
+                                    await PusherUtils.PushNoteAsync(body, title, ((Device)device).Iden));
                         }
                     }
 
