@@ -7,6 +7,8 @@ using Windows.UI.Xaml.Controls;
 using SQLite;
 using PusherForWindows.Model;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Animation;
 
 
 namespace PusherForWindows

@@ -17,7 +17,7 @@ namespace PusherForWindows
     {
         private StorageFile file;
 
-        public event EventHandler<PushEventArgs> NewPushSent;
+        public event EventHandler<Push> NewPushSent;
 
         public FastPushFlyout()
         {
@@ -38,9 +38,9 @@ namespace PusherForWindows
                     SendPushButton.IsEnabled = false;
                     FilePickerButton.IsEnabled = false;
 
-                    var newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) : 
+                    var newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
                         await PusherUtils.PushNoteAsync(body, title);
-                    
+
                     if (newPush != null)
                     {
                         TitleTextBox.Text = string.Empty;
@@ -108,26 +108,8 @@ namespace PusherForWindows
 
         private void OnNewPushSent(Push newPush)
         {
-            if(this.NewPushSent != null)
-                this.NewPushSent(this, new PushEventArgs(newPush));
-        }
-    }
-
-    public class PushEventArgs : EventArgs
-    {
-        public Push NewPush
-        {
-            get
-            {
-                return this.newPush;
-            }
-        }
-
-        private Push newPush;
-
-        public PushEventArgs(Push newPush)
-        {
-            this.newPush = newPush;
+            if (this.NewPushSent != null)
+                this.NewPushSent(this, newPush);
         }
     }
 }

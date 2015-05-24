@@ -2,7 +2,7 @@
 
 namespace PusherForWindows.Model
 {
-    public class Push
+    public class Push : EventArgs
     {
         public string Iden { get; set; }
 

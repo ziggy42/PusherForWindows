@@ -98,9 +98,9 @@ namespace PusherForWindows
             flyout.ShowIndependent();
         }
 
-        public void OnNewPush(object sender, PushEventArgs e)
+        public void OnNewPush(object sender, Push p)
         {
-            this.pushDataSource.Add(e.NewPush);
+            this.pushDataSource.Add(p);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
