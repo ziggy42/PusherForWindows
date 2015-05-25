@@ -33,7 +33,7 @@ namespace PusherForWindows
         {
             if (e.NavigationMode != NavigationMode.Back)
             {
-                if (!PusherUtils.IsUserLoggedIn())
+                if (!Pushbullet.IsUserLoggedIn())
                 {
                     this.CreateLoginDialogAsync();
                 }
@@ -56,14 +56,14 @@ namespace PusherForWindows
         {
             try
             {
-                System.Uri startUri = new Uri(PusherUtils.GetPushbulletLoginURL());
-                System.Uri endUri = new Uri(PusherUtils.REDIRECT_URI);
+                System.Uri startUri = new Uri(Pushbullet.GetPushbulletLoginURL());
+                System.Uri endUri = new Uri(Pushbullet.REDIRECT_URI);
 
                 WebAuthenticationResult webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(
                                                         WebAuthenticationOptions.None, startUri, endUri);
                 if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
                 {
-                    PusherUtils.StoreAccessToken(webAuthenticationResult.ResponseData.ToString());
+                    Pushbullet.StoreAccessToken(webAuthenticationResult.ResponseData.ToString());
                 }
                 else if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
                 {
@@ -161,7 +161,7 @@ namespace PusherForWindows
             var dialog = new MessageDialog("Are you sure you want to logout?");
             dialog.Commands.Add(new UICommand("Logout", (command) =>
             {
-                PusherUtils.DeleteAccessToken();
+                Pushbullet.DeleteAccessToken();
                 App.Current.Exit();
             }));
             dialog.Commands.Add(new UICommand("Cancel", null));
@@ -179,7 +179,7 @@ namespace PusherForWindows
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             var push = senderElement.DataContext as Push;
-            if (await PusherUtils.DeletePushAsync(push))
+            if (await Pushbullet.DeletePushAsync(push))
                 this.pushDataSource.Remove(push);
         }
 

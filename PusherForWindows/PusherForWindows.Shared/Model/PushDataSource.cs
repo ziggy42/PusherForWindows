@@ -50,7 +50,7 @@ namespace PusherForWindows.Model
 
         public async void Refresh()
         {
-            var updatedPushes = await PusherUtils.UpdatePushListAsync();
+            var updatedPushes = await Pushbullet.UpdatePushListAsync();
             foreach (var push in updatedPushes)
             {
                 var index = this.pushes.IndexOf(push);

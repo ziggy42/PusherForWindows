@@ -38,8 +38,8 @@ namespace PusherForWindows
                     SendPushButton.IsEnabled = false;
                     FilePickerButton.IsEnabled = false;
 
-                    var newPush = (this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
-                        await PusherUtils.PushNoteAsync(body, title);
+                    var newPush = (this.file != null) ? await Pushbullet.PushFileAsync(this.file, body, title) :
+                        await Pushbullet.PushNoteAsync(body, title);
 
                     if (newPush != null)
                     {

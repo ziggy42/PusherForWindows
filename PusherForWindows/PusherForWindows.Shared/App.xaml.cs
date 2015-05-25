@@ -9,6 +9,7 @@ using PusherForWindows.Model;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
+using PusherForWindows.Pusher;
 
 
 namespace PusherForWindows
@@ -28,6 +29,9 @@ namespace PusherForWindows
             this.Suspending += this.OnSuspending;
 
             CreateDB();
+
+            PushbulletStream stream = new PushbulletStream();
+            stream.Connect();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)

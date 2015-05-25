@@ -39,7 +39,7 @@ namespace PusherForWindows.View
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             this.pushes = (ObservableCollection<Push>)e.Parameter;
-            foreach (Device device in await PusherUtils.GetDeviceListAsync())
+            foreach (Device device in await Pushbullet.GetDeviceListAsync())
             {
                 this.devices.Add(device);
             }
@@ -88,16 +88,16 @@ namespace PusherForWindows.View
                     var itemsToSend = new List<Push>();
                     if(DevicesListView.SelectedItems.Count == 0 || DevicesListView.SelectedItems.Count == this.Devices.Count)
                     {
-                        itemsToSend.Add((this.file != null) ? await PusherUtils.PushFileAsync(this.file, body, title) :
-                            await PusherUtils.PushNoteAsync(body, title));
+                        itemsToSend.Add((this.file != null) ? await Pushbullet.PushFileAsync(this.file, body, title) :
+                            await Pushbullet.PushNoteAsync(body, title));
                     }
                     else
                     {
                         foreach(var device in DevicesListView.SelectedItems)
                         {
                             itemsToSend.Add((this.file != null) ?
-                                    await PusherUtils.PushFileAsync(this.file, body, title, ((Device)device).Iden) :
-                                    await PusherUtils.PushNoteAsync(body, title, ((Device)device).Iden));
+                                    await Pushbullet.PushFileAsync(this.file, body, title, ((Device)device).Iden) :
+                                    await Pushbullet.PushNoteAsync(body, title, ((Device)device).Iden));
                         }
                     }
 
