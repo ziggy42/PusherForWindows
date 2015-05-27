@@ -77,16 +77,19 @@ namespace PusherForWindows.Model
             }
             else
             {
+                var isAdded = false;
                 for (int i = 0; i < this.pushes.Count; i++)
                 {
                     if (push.Created > this.pushes[i].Created)
                     {
                         this.pushes.Insert(i, push);
+                        isAdded = true;
                         break;
                     }
                 }
 
-                this.pushes.Add(push);
+                if (!isAdded)
+                    this.pushes.Add(push);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace PusherForWindows.Model
         public string MimeType { get; set; }
 
         public string Body { get; set; }
-        
+
         public Uri URL { get; set; }
 
         public PushFile(string iden, string title, string body, long created, long modified,

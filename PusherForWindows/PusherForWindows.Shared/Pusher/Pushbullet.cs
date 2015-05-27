@@ -96,11 +96,11 @@ namespace PusherForWindows.Pusher
                 switch ((string)push.type)
                 {
                     case "note":
-                        currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                        currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created,
                             (long)push.modified, (string)push.body);
                         break;
                     case "link":
-                        currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                        currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created,
                             (long)push.modified, (string)push.url);
                         break;
                 }
@@ -170,7 +170,7 @@ namespace PusherForWindows.Pusher
                 if (response.IsSuccessStatusCode)
                 {
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
-                    var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created, 
+                    var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created,
                         (long)push.modified, (string)push.file_name, (string)push.file_type, (string)push.file_url);
                     ((App)Application.Current).InsertPush(currentPush);
                     return currentPush;
@@ -245,16 +245,16 @@ namespace PusherForWindows.Pusher
                         switch ((string)push.type)
                         {
                             case "note":
-                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created,
                                     (long)push.modified, (string)push.body);
                                 break;
                             case "link":
-                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created,
                                     (long)push.modified, (string)push.url);
                                 break;
                             case "file":
-                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, 
-                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type, 
+                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body,
+                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type,
                                     (string)push.file_url);
                                 break;
                         }
@@ -275,7 +275,7 @@ namespace PusherForWindows.Pusher
             if (!localSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
                 return await GetPushListAsync();
 
-            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + 
+            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" +
                 localSettings[LAST_TIME_CHECKED_KEY]);
             if (response.IsSuccessStatusCode)
             {
@@ -291,27 +291,29 @@ namespace PusherForWindows.Pusher
                         switch ((string)push.type)
                         {
                             case "note":
-                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created, 
+                                currentPush = new PushNote((string)push.iden, (string)push.title, (long)push.created,
                                     (long)push.modified, (string)push.body);
                                 break;
                             case "link":
-                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created, 
+                                currentPush = new PushLink((string)push.iden, (string)push.title, (long)push.created,
                                     (long)push.modified, (string)push.url);
                                 break;
                             case "file":
-                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, 
-                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type, 
+                                currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body,
+                                    (long)push.created, (long)push.modified, (string)push.file_name, (string)push.file_type,
                                     (string)push.file_url);
                                 break;
                         }
+                        ((App)Application.Current).UpdatePush(currentPush);
                     }
                     else
                     {
                         currentPush = new Push((string)push.iden, (long)push.created, (long)push.modified, false);
+                        ((App)Application.Current).DeletePush(currentPush);
                     }
 
                     pushes.Add(currentPush);
-                    ((App)Application.Current).UpdatePush(currentPush);
+
                 }
 
                 return pushes;

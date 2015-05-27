@@ -7,8 +7,6 @@ using Windows.UI.Xaml.Controls;
 using SQLite;
 using PusherForWindows.Model;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Media.Animation;
 using PusherForWindows.Pusher;
 
 
@@ -132,8 +130,15 @@ namespace PusherForWindows
 
         public async void UpdatePush(Push push)
         {
+            if (!await PushEntryExists(push))
+                this.InsertPush(push);
+        }
+
+        public async Task<bool> PushEntryExists(Push push)
+        {
             var conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.UpdateAsync(GetPushEntryFromPush(push));
+            var queryResult = await conn.Table<PushEntry>().Where(x => x.Iden.Equals(push.Iden)).CountAsync();
+            return queryResult > 0;
         }
 
         public async Task<IList<Push>> GetAllPushes()
