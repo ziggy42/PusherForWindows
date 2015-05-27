@@ -115,7 +115,6 @@ namespace PusherForWindows
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(SearchTextBox.Text);
             var pushQuery = from push in pushDataSource.Items select push;
 
             if (string.IsNullOrEmpty(SearchTextBox.Text))
@@ -161,7 +160,8 @@ namespace PusherForWindows
             var dialog = new MessageDialog("Are you sure you want to logout?");
             dialog.Commands.Add(new UICommand("Logout", (command) =>
             {
-                Pushbullet.DeleteAccessToken();
+                Pushbullet.ClearPreferences();
+                ((App)Application.Current).DropTable();
                 App.Current.Exit();
             }));
             dialog.Commands.Add(new UICommand("Cancel", null));

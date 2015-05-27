@@ -61,10 +61,13 @@ namespace PusherForWindows.Pusher
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
         }
 
-        public static void DeleteAccessToken()
+        public static void ClearPreferences()
         {
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] = null;
             Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = false;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = null;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = null;
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values[LAST_TIME_CHECKED_KEY] = null;
         }
 
         public static async Task<Push> PushNoteAsync(string message, string title = "", string device = "")

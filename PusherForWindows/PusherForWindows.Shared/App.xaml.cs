@@ -112,6 +112,12 @@ namespace PusherForWindows
             await conn.CreateTableAsync<PushEntry>();
         }
 
+        public async void DropTable()
+        {
+            var conn = new SQLiteAsyncConnection(DB_NAME);
+            await conn.ExecuteAsync("DROP TABLE PushEntry;");
+        }
+
         public async void InsertPush(Push push)
         {
             var conn = new SQLiteAsyncConnection(DB_NAME);
