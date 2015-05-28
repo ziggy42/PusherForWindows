@@ -8,7 +8,7 @@ using Windows.Web;
 
 namespace PusherForWindows.Pusher
 {
-    class PushbulletStream
+    public class PushbulletStream
     {
         private MessageWebSocket messageWebSocket;
         private DataWriter messageWriter;
@@ -20,18 +20,23 @@ namespace PusherForWindows.Pusher
                 Uri server = new Uri("wss://stream.pushbullet.com/websocket/" +
                     (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[Pushbullet.ACCESS_TOKEN_KEY]);
 
-                messageWebSocket = new MessageWebSocket();
-                messageWebSocket.Control.MessageType = SocketMessageType.Utf8;
-                messageWebSocket.MessageReceived += MessageReceived;
+                this.messageWebSocket = new MessageWebSocket();
+                this.messageWebSocket.Control.MessageType = SocketMessageType.Utf8;
+                this.messageWebSocket.MessageReceived += MessageReceived;
 
-                await messageWebSocket.ConnectAsync(server);
-                messageWriter = new DataWriter(messageWebSocket.OutputStream);
+                await this.messageWebSocket.ConnectAsync(server);
+                this.messageWriter = new DataWriter(messageWebSocket.OutputStream);
             }
             catch (Exception ex)
             {
                 WebErrorStatus status = WebSocketError.GetStatus(ex.GetBaseException().HResult);
                 System.Diagnostics.Debug.WriteLine("Eccezzione in Connect: " + status.ToString());
             }
+        }
+
+        public void Close()
+        {
+            this.messageWebSocket.Close(1000, "App Closes");
         }
 
         private void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
@@ -68,11 +73,6 @@ namespace PusherForWindows.Pusher
                 WebErrorStatus status = WebSocketError.GetStatus(ex.GetBaseException().HResult);
                 System.Diagnostics.Debug.WriteLine("MessageReceived Exception: " + status.ToString());
             }
-        }
-
-        public void Close()
-        {
-            this.messageWebSocket.Close(1000, "App Closes");
         }
     }
 }

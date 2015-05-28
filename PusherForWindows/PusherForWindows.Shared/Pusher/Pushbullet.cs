@@ -9,6 +9,7 @@ using Windows.Storage;
 using Newtonsoft.Json;
 using PusherForWindows.Model;
 using Windows.UI.Xaml;
+using Windows.Foundation.Collections;
 
 namespace PusherForWindows.Pusher
 {
@@ -40,10 +41,22 @@ namespace PusherForWindows.Pusher
             }
         }
 
+        private static IPropertySet localSettings;
+
+        private static IPropertySet LocalSettings
+        {
+            get
+            {
+                if (localSettings == null)
+                    localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+                return localSettings;
+            }
+        }
+
         public static bool IsUserLoggedIn()
         {
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values.ContainsKey(LOGIN_KEY))
-                return (bool)Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY];
+            if (LocalSettings.ContainsKey(LOGIN_KEY))
+                return (bool)LocalSettings[LOGIN_KEY];
 
             return false;
         }
@@ -56,20 +69,17 @@ namespace PusherForWindows.Pusher
 
         public static void StoreAccessToken(string redirect)
         {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] =
-                redirect.Substring(redirect.IndexOf('=') + 1);
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = true;
+            LocalSettings[ACCESS_TOKEN_KEY] = redirect.Substring(redirect.IndexOf('=') + 1);
+            LocalSettings[LOGIN_KEY] = true;
         }
 
         public static void ClearPreferences()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
-
-            localSettings[ACCESS_TOKEN_KEY] = null;
-            localSettings[LOGIN_KEY] = false;
-            localSettings[USER_NAME_KEY] = null;
-            localSettings[USER_PIC_URL_KEY] = null;
-            localSettings[LAST_TIME_CHECKED_KEY] = null;
+            LocalSettings[ACCESS_TOKEN_KEY] = null;
+            LocalSettings[LOGIN_KEY] = false;
+            LocalSettings[USER_NAME_KEY] = null;
+            LocalSettings[USER_PIC_URL_KEY] = null;
+            LocalSettings[LAST_TIME_CHECKED_KEY] = null;
         }
 
         public static async Task<Push> PushNoteAsync(string message, string title = "", string device = "")
@@ -204,8 +214,8 @@ namespace PusherForWindows.Pusher
                     { USER_PIC_URL_KEY, (string)json.image_url }
                 };
 
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = (string)json.name;
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = (string)json.image_url;
+                LocalSettings[USER_NAME_KEY] = (string)json.name;
+                LocalSettings[USER_PIC_URL_KEY] = (string)json.image_url;
             }
 
             return null;
@@ -235,7 +245,7 @@ namespace PusherForWindows.Pusher
 
             if (response.IsSuccessStatusCode)
             {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
+                LocalSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
                 var pushes = new ObservableCollection<Push>();
@@ -273,15 +283,14 @@ namespace PusherForWindows.Pusher
 
         public async static Task<ObservableCollection<Push>> UpdatePushListAsync()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
-            if (!localSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
+            if (!LocalSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
                 return await GetPushListAsync();
 
-            var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" +
-                localSettings[LAST_TIME_CHECKED_KEY]);
+            var response = await 
+                Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + LocalSettings[LAST_TIME_CHECKED_KEY]);
             if (response.IsSuccessStatusCode)
             {
-                localSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
+                LocalSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
                 var pushes = new ObservableCollection<Push>();

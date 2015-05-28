@@ -11,25 +11,33 @@ namespace PusherForWindows.View
 
         private IPropertySet localSettings;
 
+        private IPropertySet LocalSettings
+        {
+            get
+            {
+                if (localSettings == null)
+                    this.localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+                return this.localSettings;
+            }
+        }
+
         public PreferencesFlyout()
         {
-            this.localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
-
             this.InitializeComponent();
 
-            this.MirroringCheckBox.IsChecked = (localSettings[MIRRORING_ENABLED] == null) || ((bool)localSettings[MIRRORING_ENABLED]);
+            this.MirroringCheckBox.IsChecked = (this.LocalSettings[MIRRORING_ENABLED] == null) || ((bool)this.LocalSettings[MIRRORING_ENABLED]);
         }
 
         private void MirroringCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            localSettings[MIRRORING_ENABLED] = true;
-            ((App)Application.Current).StartMirroringNotificationStream();
+            this.LocalSettings[MIRRORING_ENABLED] = true;
+            ((App)Application.Current).Stream.Connect();
         }
 
         private void MirroringCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            localSettings[MIRRORING_ENABLED] = false;
-            ((App)Application.Current).StopMirroringNotificationStream();
+            this.LocalSettings[MIRRORING_ENABLED] = false;
+            ((App)Application.Current).Stream.Close();
         }
     }
 }

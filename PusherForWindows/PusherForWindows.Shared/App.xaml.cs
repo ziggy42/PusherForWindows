@@ -15,7 +15,7 @@ namespace PusherForWindows
     public sealed partial class App : Application
     {
 
-        private PushbulletStream stream;
+        public PushbulletStream Stream { get; private set; }
 
         public PushDAO Database { get; private set; }
 
@@ -28,14 +28,14 @@ namespace PusherForWindows
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
-            Database = new PushDAOImpl();
-            Database.InitializeAsync();
+            this.Database = new PushDAOImpl();
+            this.Database.InitializeAsync();
 
-            stream = new PushbulletStream();
+            this.Stream = new PushbulletStream();
 
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
             if ((localSettings["mirroring"] == null) || ((bool)localSettings["mirroring"]))
-                stream.Connect();
+                this.Stream.Connect();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -140,14 +140,5 @@ namespace PusherForWindows
             deferral.Complete();
         }
 
-        public void StartMirroringNotificationStream()
-        {
-            this.stream.Connect();
-        }
-
-        public void StopMirroringNotificationStream()
-        {
-            this.stream.Close();
-        }
     }
 }
