@@ -198,14 +198,6 @@
                     HorizontalAlignment="Stretch"
                     Click="RefreshButton_Click"
                     Content="Refresh" />
-
-                <Button
-                    Name="LogoutButton"
-                    Style="{StaticResource HoverTextButtonStyle}" 
-                    Padding="10, 10, 10, 10" 
-                    HorizontalAlignment="Stretch"
-                    Click="LogoutButton_Click"
-                    Content="Logout" />
             </StackPanel>
         </Grid>
 

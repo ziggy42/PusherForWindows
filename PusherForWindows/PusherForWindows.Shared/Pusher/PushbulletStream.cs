@@ -1,10 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
@@ -75,7 +70,7 @@ namespace PusherForWindows.Pusher
             }
         }
 
-        private void Close()
+        public void Close()
         {
             this.messageWebSocket.Close(1000, "App Closes");
         }

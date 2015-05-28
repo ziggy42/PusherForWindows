@@ -63,11 +63,13 @@ namespace PusherForWindows.Pusher
 
         public static void ClearPreferences()
         {
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY] = null;
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[LOGIN_KEY] = false;
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_NAME_KEY] = null;
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[USER_PIC_URL_KEY] = null;
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values[LAST_TIME_CHECKED_KEY] = null;
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+
+            localSettings[ACCESS_TOKEN_KEY] = null;
+            localSettings[LOGIN_KEY] = false;
+            localSettings[USER_NAME_KEY] = null;
+            localSettings[USER_PIC_URL_KEY] = null;
+            localSettings[LAST_TIME_CHECKED_KEY] = null;
         }
 
         public static async Task<Push> PushNoteAsync(string message, string title = "", string device = "")

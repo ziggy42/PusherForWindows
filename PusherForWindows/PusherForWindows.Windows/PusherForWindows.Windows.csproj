@@ -116,6 +116,9 @@
       <DependentUpon>FastPushFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\PreferencesFlyout.xaml.cs">
+      <DependentUpon>PreferencesFlyout.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -140,6 +143,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\FastPushFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreferencesFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -155,19 +155,6 @@ namespace PusherForWindows
             PushesListView.DataContext = new PushDataSource(pushQuery.ToList());
         }
 
-        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new MessageDialog("Are you sure you want to logout?");
-            dialog.Commands.Add(new UICommand("Logout", (command) =>
-            {
-                Pushbullet.ClearPreferences();
-                ((App)Application.Current).DropTable();
-                App.Current.Exit();
-            }));
-            dialog.Commands.Add(new UICommand("Cancel", null));
-            var asyncOperation = await dialog.ShowAsync();
-        }
-
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;

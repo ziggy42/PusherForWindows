@@ -8,6 +8,9 @@ using SQLite;
 using PusherForWindows.Model;
 using System.Threading.Tasks;
 using PusherForWindows.Pusher;
+using Windows.UI.ApplicationSettings;
+using PusherForWindows.View;
+using Windows.UI.Popups;
 
 
 namespace PusherForWindows
@@ -16,6 +19,8 @@ namespace PusherForWindows
     {
 
         private static readonly string DB_NAME = "DBPush";
+
+        private PushbulletStream stream;
 
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
@@ -28,8 +33,11 @@ namespace PusherForWindows
 
             CreateDB();
 
-            PushbulletStream stream = new PushbulletStream();
-            stream.Connect();
+            stream = new PushbulletStream();
+
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+            if ((localSettings["mirroring"] == null) || ((bool)localSettings["mirroring"]))
+                stream.Connect();
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -83,6 +91,36 @@ namespace PusherForWindows
             Window.Current.Activate();
         }
 
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
+        }
+
+        private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+
+            args.Request.ApplicationCommands.Add(new SettingsCommand(
+                "Mirroring Notifications", "Mirroring Notifications", (handler) =>
+                {
+                    PreferencesFlyout preferencesFlyout = new PreferencesFlyout();
+                    preferencesFlyout.Show();
+                }));
+
+            args.Request.ApplicationCommands.Add(new SettingsCommand(
+                "Logout", "Logout", async (handler) =>
+                {
+                    var dialog = new MessageDialog("Are you sure you want to logout?");
+                    dialog.Commands.Add(new UICommand("Logout", (command) =>
+                    {
+                        Pushbullet.ClearPreferences();
+                        ((App)Application.Current).DropTable();
+                        App.Current.Exit();
+                    }));
+                    dialog.Commands.Add(new UICommand("Cancel", null));
+                    var asyncOperation = await dialog.ShowAsync();
+                }));
+        }
+
 #if WINDOWS_PHONE_APP
         /// <summary>
         /// Ripristina le transizioni del contenuto dopo l'avvio dell'applicazione.
@@ -102,6 +140,16 @@ namespace PusherForWindows
             var deferral = e.SuspendingOperation.GetDeferral();
 
             deferral.Complete();
+        }
+
+        public void StartMirroringNotificationStream()
+        {
+            this.stream.Connect();
+        }
+
+        public void StopMirroringNotificationStream()
+        {
+            this.stream.Close();
         }
 
         public async void CreateDB()
