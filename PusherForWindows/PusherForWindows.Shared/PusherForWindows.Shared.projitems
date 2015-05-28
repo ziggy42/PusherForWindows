@@ -22,6 +22,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushLink.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushNote.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushTemplateSelector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDAO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDAOImpl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDTO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\Pushbullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\PushbulletStream.cs" />
   </ItemGroup>

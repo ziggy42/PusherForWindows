@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SQLite;
-using PusherForWindows.Model;
-using System.Threading.Tasks;
 using PusherForWindows.Pusher;
 using Windows.UI.ApplicationSettings;
 using PusherForWindows.View;
 using Windows.UI.Popups;
+using PusherForWindows.Persistance;
 
 
 namespace PusherForWindows
@@ -18,9 +15,9 @@ namespace PusherForWindows
     public sealed partial class App : Application
     {
 
-        private static readonly string DB_NAME = "DBPush";
-
         private PushbulletStream stream;
+
+        public PushDAO Database { get; private set; }
 
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
@@ -31,7 +28,8 @@ namespace PusherForWindows
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
-            CreateDB();
+            Database = new PushDAOImpl();
+            Database.InitializeAsync();
 
             stream = new PushbulletStream();
 
@@ -113,7 +111,7 @@ namespace PusherForWindows
                     dialog.Commands.Add(new UICommand("Logout", (command) =>
                     {
                         Pushbullet.ClearPreferences();
-                        ((App)Application.Current).DropTable();
+                        Database.DropTableAsync();
                         App.Current.Exit();
                     }));
                     dialog.Commands.Add(new UICommand("Cancel", null));
@@ -150,122 +148,6 @@ namespace PusherForWindows
         public void StopMirroringNotificationStream()
         {
             this.stream.Close();
-        }
-
-        public async void CreateDB()
-        {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.CreateTableAsync<PushEntry>();
-        }
-
-        public async void DropTable()
-        {
-            var conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.ExecuteAsync("DROP TABLE PushEntry;");
-        }
-
-        public async void InsertPush(Push push)
-        {
-            var conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.InsertAsync(GetPushEntryFromPush(push));
-        }
-
-        public async void DeletePush(Push push)
-        {
-            var conn = new SQLiteAsyncConnection(DB_NAME);
-            await conn.ExecuteAsync("DELETE FROM PushEntry WHERE Iden = '" + push.Iden + "';");
-        }
-
-        public async void UpdatePush(Push push)
-        {
-            if (!await PushEntryExists(push))
-                this.InsertPush(push);
-        }
-
-        public async Task<bool> PushEntryExists(Push push)
-        {
-            var conn = new SQLiteAsyncConnection(DB_NAME);
-            var queryResult = await conn.Table<PushEntry>().Where(x => x.Iden.Equals(push.Iden)).CountAsync();
-            return queryResult > 0;
-        }
-
-        public async Task<IList<Push>> GetAllPushes()
-        {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DB_NAME);
-
-            var result = await (conn.Table<PushEntry>()).ToListAsync();
-
-            IList<Push> pushes = new List<Push>();
-            foreach (PushEntry pushEntry in result)
-            {
-                switch (pushEntry.Type)
-                {
-                    case TYPE.FILE:
-                        pushes.Add(new PushFile(pushEntry.Iden, pushEntry.Title, pushEntry.Body, pushEntry.Created,
-                            pushEntry.Modified, pushEntry.FileName, pushEntry.MimeType, pushEntry.Url));
-                        break;
-                    case TYPE.LINK:
-                        pushes.Add(new PushLink(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified,
-                            pushEntry.Url));
-                        break;
-                    case TYPE.NOTE:
-                        pushes.Add(new PushNote(pushEntry.Iden, pushEntry.Title, pushEntry.Created, pushEntry.Modified,
-                            pushEntry.Body));
-                        break;
-                }
-            }
-
-            return pushes;
-        }
-
-        private PushEntry GetPushEntryFromPush(Push push)
-        {
-            PushEntry entry = new PushEntry()
-            {
-                Iden = push.Iden,
-                Title = push.Title,
-                Created = push.Created,
-                Modified = push.Modified,
-            };
-
-            if (push is PushFile)
-            {
-                entry.Type = TYPE.FILE;
-                entry.FileName = ((PushFile)push).FileName;
-                entry.MimeType = ((PushFile)push).MimeType;
-                entry.Url = ((PushFile)push).URL.ToString();
-            }
-            else if (push is PushNote)
-            {
-                entry.Type = TYPE.NOTE;
-                entry.Body = ((PushNote)push).Body;
-            }
-            else if (push is PushLink)
-            {
-                entry.Type = TYPE.LINK;
-                entry.Url = ((PushLink)push).URL.ToString();
-            }
-
-            return entry;
-        }
-
-        public enum TYPE { FILE, NOTE, LINK }
-
-        public class PushEntry
-        {
-            [SQLite.PrimaryKey, SQLite.NotNull]
-            public string Iden { get; set; }
-            public string Title { get; set; }
-            [SQLite.NotNull]
-            public long Created { get; set; }
-            [SQLite.NotNull]
-            public long Modified { get; set; }
-            [SQLite.NotNull]
-            public TYPE Type { get; set; }
-            public string FileName { get; set; }
-            public string MimeType { get; set; }
-            public string Body { get; set; }
-            public string Url { get; set; }
         }
     }
 }

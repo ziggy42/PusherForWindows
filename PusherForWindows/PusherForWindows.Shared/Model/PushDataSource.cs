@@ -39,7 +39,7 @@ namespace PusherForWindows.Model
 
         public async void Populate()
         {
-            var newPushes = new ObservableCollection<Push>(await ((App)Application.Current).GetAllPushes());
+            var newPushes = new ObservableCollection<Push>(await ((App)Application.Current).Database.GetAllPushesAsync());
             foreach (var p in newPushes)
             {
                 this.InserFirst(p);
