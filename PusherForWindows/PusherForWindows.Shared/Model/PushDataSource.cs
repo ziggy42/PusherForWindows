@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using PusherForWindows.Pusher;
 using Windows.UI.Xaml;
+using Windows.Networking.Connectivity;
 
 namespace PusherForWindows.Model
 {
@@ -45,7 +46,9 @@ namespace PusherForWindows.Model
                 this.InserFirst(p);
             }
 
-            this.Refresh();
+            if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel() 
+                == NetworkConnectivityLevel.InternetAccess)
+                this.Refresh();
         }
 
         public async void Refresh()

@@ -40,7 +40,7 @@ namespace PusherForWindows
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("I'm in");
-                    this.SetupAsync();
+                    this.pushDataSource.Populate();
                 }
             }
         }
@@ -81,14 +81,7 @@ namespace PusherForWindows
                 System.Diagnostics.Debug.WriteLine(Error.ToString());
             }
 
-            this.SetupAsync();
-        }
-
-        private void SetupAsync()
-        {
-            if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
-                    == NetworkConnectivityLevel.InternetAccess)
-                this.pushDataSource.Populate();
+            this.pushDataSource.Populate();
         }
 
         private void FastPushButton_Click(object sender, RoutedEventArgs e)
