@@ -9,11 +9,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PusherForWindows.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PusherForWindows.Windows", "PusherForWindows\PusherForWindows.Windows\PusherForWindows.Windows.csproj", "{7D36C4D9-7FCD-4E63-B67C-3BA0B83C4BC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PusherForWindows.WindowsPhone", "PusherForWindows\PusherForWindows.WindowsPhone\PusherForWindows.WindowsPhone.csproj", "{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		PusherForWindows\PusherForWindows.Shared\PusherForWindows.Shared.projitems*{56cf17af-1183-4a24-b9a4-ebb6382f7bea}*SharedItemsImports = 4
 		PusherForWindows\PusherForWindows.Shared\PusherForWindows.Shared.projitems*{72f6184d-c2a5-45b3-a4a6-51606319f9e9}*SharedItemsImports = 13
 		PusherForWindows\PusherForWindows.Shared\PusherForWindows.Shared.projitems*{7d36c4d9-7fcd-4e63-b67c-3ba0b83c4bc7}*SharedItemsImports = 4
 	EndGlobalSection
@@ -52,26 +49,6 @@ Global
 		{7D36C4D9-7FCD-4E63-B67C-3BA0B83C4BC7}.Release|x86.ActiveCfg = Release|x86
 		{7D36C4D9-7FCD-4E63-B67C-3BA0B83C4BC7}.Release|x86.Build.0 = Release|x86
 		{7D36C4D9-7FCD-4E63-B67C-3BA0B83C4BC7}.Release|x86.Deploy.0 = Release|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|Any CPU.ActiveCfg = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|Any CPU.Build.0 = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|Any CPU.Deploy.0 = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|ARM.ActiveCfg = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|ARM.Build.0 = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|ARM.Deploy.0 = Debug|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|x86.ActiveCfg = Debug|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|x86.Build.0 = Debug|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Debug|x86.Deploy.0 = Debug|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|ARM.ActiveCfg = Release|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|ARM.Build.0 = Release|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|ARM.Deploy.0 = Release|ARM
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|x64.ActiveCfg = Release|Any CPU
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|x86.ActiveCfg = Release|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|x86.Build.0 = Release|x86
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +56,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{72F6184D-C2A5-45B3-A4A6-51606319F9E9} = {03E4B8D1-9175-4446-922E-7C38397E6326}
 		{7D36C4D9-7FCD-4E63-B67C-3BA0B83C4BC7} = {03E4B8D1-9175-4446-922E-7C38397E6326}
-		{56CF17AF-1183-4A24-B9A4-EBB6382F7BEA} = {03E4B8D1-9175-4446-922E-7C38397E6326}
 	EndGlobalSection
 EndGlobal
