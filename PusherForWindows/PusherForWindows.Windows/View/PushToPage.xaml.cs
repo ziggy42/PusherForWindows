@@ -104,6 +104,7 @@ namespace PusherForWindows.View
                     TitleTextBox.Text = string.Empty;
                     BodyTextBox.Text = string.Empty;
                     FileImage.Source = null;
+                    this.file = null;
 
                     foreach (var newPush in itemsToSend)
                     {
