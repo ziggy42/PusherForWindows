@@ -27,5 +27,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDTO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\Pushbullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\PushbulletStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />
   </ItemGroup>
 </Project>

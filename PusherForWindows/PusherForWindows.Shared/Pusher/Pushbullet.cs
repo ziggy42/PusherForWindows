@@ -126,10 +126,11 @@ namespace PusherForWindows.Pusher
 
         public static async Task<Push> PushFileAsync(StorageFile file, string body = "", string title = "", string device = "")
         {
+            var mime = String.IsNullOrEmpty(file.ContentType) ? Utils.FallbackGetMimeType(file.FileType) : file.ContentType;
             var values = new Dictionary<string, string>
             {
                { "file_name", file.Name }, 
-               { "file_type", file.ContentType }
+               { "file_type", mime }
             };
 
             var response = await Client.PostAsync(
@@ -145,7 +146,7 @@ namespace PusherForWindows.Pusher
                 var multipartFormDataContent = new MultipartFormDataContent();
                 multipartFormDataContent.Add(AddContent("acl", (string)data.acl));
                 multipartFormDataContent.Add(AddContent("awsaccesskeyid", (string)data.awsaccesskeyid));
-                multipartFormDataContent.Add(AddContent("content-type", file.ContentType));
+                multipartFormDataContent.Add(AddContent("content-type", mime));
                 multipartFormDataContent.Add(AddContent("key", (string)data.key));
                 multipartFormDataContent.Add(AddContent("policy", (string)data.policy));
                 multipartFormDataContent.Add(AddContent("signature", (string)data.signature));
@@ -156,7 +157,7 @@ namespace PusherForWindows.Pusher
                     Name = "\"file\"",
                     FileName = "\"" + file.Name + "\""
                 };
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(mime);
 
                 multipartFormDataContent.Add(fileContent);
 
@@ -169,7 +170,7 @@ namespace PusherForWindows.Pusher
                 {
                     { "type", "file" }, 
                     { "file_name", file.Name }, 
-                    { "file_type", file.ContentType }, 
+                    { "file_type", mime }, 
                     { "file_url", file_url }, 
                     { "title", title },
                     { "body", body },
@@ -290,7 +291,7 @@ namespace PusherForWindows.Pusher
                 Client.GetAsync("https://api.pushbullet.com/v2/pushes?modified_after=" + LocalSettings[LAST_TIME_CHECKED_KEY]);
             if (response.IsSuccessStatusCode)
             {
-                LocalSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
+                LocalSettings[LAST_TIME_CHECKED_KEY] = Utils.GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
                 var pushes = new ObservableCollection<Push>();
@@ -343,9 +344,5 @@ namespace PusherForWindows.Pusher
             return response.IsSuccessStatusCode;
         }
 
-        private static long GetUNIXTimeStamp()
-        {
-            return (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-        }
     }
 }
