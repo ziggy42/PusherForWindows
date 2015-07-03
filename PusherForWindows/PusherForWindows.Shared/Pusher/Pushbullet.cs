@@ -246,7 +246,7 @@ namespace PusherForWindows.Pusher
 
             if (response.IsSuccessStatusCode)
             {
-                LocalSettings[LAST_TIME_CHECKED_KEY] = GetUNIXTimeStamp();
+                LocalSettings[LAST_TIME_CHECKED_KEY] = Utils.GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
                 var pushes = new ObservableCollection<Push>();
