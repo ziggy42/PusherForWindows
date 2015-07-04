@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,6 +23,18 @@ namespace PusherForWindows.Pusher
         public static readonly string USER_PIC_URL_KEY = "picurl";
         public static readonly string LAST_TIME_CHECKED_KEY = "lasttime";
 
+        private static IPropertySet localSettings;
+
+        private static IPropertySet LocalSettings
+        {
+            get
+            {
+                if (localSettings == null)
+                    localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
+                return localSettings;
+            }
+        }
+
         private static HttpClient client;
 
         private static HttpClient Client
@@ -34,22 +45,10 @@ namespace PusherForWindows.Pusher
                 {
                     client = new HttpClient();
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                        (string)Windows.Storage.ApplicationData.Current.LocalSettings.Values[ACCESS_TOKEN_KEY]);
+                        (string)LocalSettings[ACCESS_TOKEN_KEY]);
                 }
 
                 return client;
-            }
-        }
-
-        private static IPropertySet localSettings;
-
-        private static IPropertySet LocalSettings
-        {
-            get
-            {
-                if (localSettings == null)
-                    localSettings = Windows.Storage.ApplicationData.Current.LocalSettings.Values;
-                return localSettings;
             }
         }
 
@@ -240,7 +239,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public static async Task<ObservableCollection<Push>> GetPushListAsync()
+        public static async Task<IList<Push>> GetPushListAsync()
         {
             var response = await Client.GetAsync("https://api.pushbullet.com/v2/pushes");
 
@@ -249,7 +248,7 @@ namespace PusherForWindows.Pusher
                 LocalSettings[LAST_TIME_CHECKED_KEY] = Utils.GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-                var pushes = new ObservableCollection<Push>();
+                var pushes = new List<Push>();
                 foreach (dynamic push in json["pushes"])
                 {
                     if ((bool)push.active)
@@ -282,7 +281,7 @@ namespace PusherForWindows.Pusher
             return null;
         }
 
-        public async static Task<ObservableCollection<Push>> UpdatePushListAsync()
+        public async static Task<IList<Push>> UpdatePushListAsync()
         {
             if (!LocalSettings.ContainsKey(LAST_TIME_CHECKED_KEY))
                 return await GetPushListAsync();
@@ -294,7 +293,7 @@ namespace PusherForWindows.Pusher
                 LocalSettings[LAST_TIME_CHECKED_KEY] = Utils.GetUNIXTimeStamp();
                 dynamic json = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-                var pushes = new ObservableCollection<Push>();
+                var pushes = new List<Push>();
                 foreach (dynamic push in json["pushes"])
                 {
                     Push currentPush = null;

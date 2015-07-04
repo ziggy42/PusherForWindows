@@ -4,7 +4,6 @@ using PusherForWindows.Model;
 using PusherForWindows.Pusher;
 using PusherForWindows.View;
 using System.Text.RegularExpressions;
-using Windows.Networking.Connectivity;
 using Windows.Security.Authentication.Web;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -108,8 +107,6 @@ namespace PusherForWindows
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var pushQuery = from push in pushDataSource.Items select push;
-
             if (string.IsNullOrEmpty(SearchTextBox.Text))
             {
                 PushesListView.DataContext = this.pushDataSource;
@@ -123,29 +120,29 @@ namespace PusherForWindows
 
         private void FilterMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            var pushQuery = from push in pushDataSource.Items select push;
-
             switch (((MenuFlyoutItem)sender).Tag.ToString())
             {
                 case "links":
-                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushLink));
+                    PushesListView.DataContext = new PushDataSource(
+                        pushDataSource.Items.Where((Push p) => p.GetType() == typeof(PushLink)).ToList());
                     break;
                 case "notes":
-                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushNote));
+                    PushesListView.DataContext = new PushDataSource(
+                        pushDataSource.Items.Where((Push p) => p.GetType() == typeof(PushNote)).ToList());
                     break;
                 case "files":
-                    pushQuery = pushQuery.Where((Push p) => p.GetType() == typeof(PushFile));
+                    PushesListView.DataContext = new PushDataSource(
+                        pushDataSource.Items.Where((Push p) => p.GetType() == typeof(PushFile)).ToList());
                     break;
                 case "images":
-                    pushQuery = pushQuery.Where((Push p) => (p.GetType() == typeof(PushFile)) &&
-                        (new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)p).MimeType).Success);
+                    PushesListView.DataContext = new PushDataSource(
+                        pushDataSource.Items.Where((Push p) => (p.GetType() == typeof(PushFile)) && 
+                            (new Regex(@"(^image\/)(.*)")).Match((string)((PushFile)p).MimeType).Success).ToList());
                     break;
                 default:
                     PushesListView.DataContext = this.pushDataSource;
                     break;
             }
-
-            PushesListView.DataContext = new PushDataSource(pushQuery.ToList());
         }
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)

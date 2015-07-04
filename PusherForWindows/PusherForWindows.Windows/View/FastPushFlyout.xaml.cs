@@ -43,10 +43,6 @@ namespace PusherForWindows
 
                     if (newPush != null)
                     {
-                        TitleTextBox.Text = string.Empty;
-                        BodyTextBox.Text = string.Empty;
-                        FileImage.Source = null;
-
                         ToastTemplateType toastTemplate = ToastTemplateType.ToastText02;
                         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
 
