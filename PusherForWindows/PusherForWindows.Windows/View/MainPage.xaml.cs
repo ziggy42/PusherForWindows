@@ -63,24 +63,26 @@ namespace PusherForWindows
                 if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
                 {
                     Pushbullet.StoreAccessToken(webAuthenticationResult.ResponseData.ToString());
+                    this.pushDataSource.Populate();
                 }
                 else if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
                 {
                     System.Diagnostics.Debug.WriteLine("HTTP Error returned by AuthenticateAsync() : " +
                         webAuthenticationResult.ResponseErrorDetail.ToString());
+                    this.CreateLoginDialogAsync();
                 }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("Error returned by AuthenticateAsync() : " +
                         webAuthenticationResult.ResponseStatus.ToString());
+                    this.CreateLoginDialogAsync();
                 }
             }
             catch (Exception Error)
             {
                 System.Diagnostics.Debug.WriteLine(Error.ToString());
+                this.CreateLoginDialogAsync();
             }
-
-            this.pushDataSource.Populate();
         }
 
         private void FastPushButton_Click(object sender, RoutedEventArgs e)
