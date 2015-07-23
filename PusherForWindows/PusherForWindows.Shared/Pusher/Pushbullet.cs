@@ -116,7 +116,7 @@ namespace PusherForWindows.Pusher
                         break;
                 }
 
-                PushDAOImpl.GetInstance().InsertPushAsync(currentPush); 
+                DAOFactory.GetPushDAO().InsertPushAsync(currentPush); 
                 return currentPush;
             }
 
@@ -184,7 +184,7 @@ namespace PusherForWindows.Pusher
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
                     var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created,
                         (long)push.modified, (string)push.file_name, (string)push.file_type, (string)push.file_url);
-                    PushDAOImpl.GetInstance().InsertPushAsync(currentPush);
+                    DAOFactory.GetPushDAO().InsertPushAsync(currentPush);
                     return currentPush;
                 }
             }
@@ -271,7 +271,7 @@ namespace PusherForWindows.Pusher
                                 break;
                         }
                         pushes.Add(currentPush);
-                        PushDAOImpl.GetInstance().InsertPushAsync(currentPush);
+                        DAOFactory.GetPushDAO().InsertPushAsync(currentPush);
                     }
                 }
 
@@ -316,12 +316,12 @@ namespace PusherForWindows.Pusher
                                 break;
                         }
 
-                        PushDAOImpl.GetInstance().UpdatePushAsync(currentPush);
+                        DAOFactory.GetPushDAO().UpdatePushAsync(currentPush);
                     }
                     else
                     {
                         currentPush = new Push((string)push.iden, (long)push.created, (long)push.modified, false);
-                        PushDAOImpl.GetInstance().DeletePushAsync(currentPush);
+                        DAOFactory.GetPushDAO().DeletePushAsync(currentPush);
                     }
 
                     pushes.Add(currentPush);
@@ -339,7 +339,7 @@ namespace PusherForWindows.Pusher
             var response = await Client.DeleteAsync("https://api.pushbullet.com/v2/pushes/" + push.Iden);
 
             if (response.IsSuccessStatusCode)
-                PushDAOImpl.GetInstance().DeletePushAsync(push);
+                DAOFactory.GetPushDAO().DeletePushAsync(push);
 
             return response.IsSuccessStatusCode;
         }

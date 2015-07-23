@@ -106,7 +106,7 @@ namespace PusherForWindows
                     dialog.Commands.Add(new UICommand("Logout", (command) =>
                     {
                         Pushbullet.ClearPreferences();
-                        PushDAOImpl.GetInstance().DropTableAsync();
+                        SQLitePushDAO.GetInstance().DropTableAsync();
                         App.Current.Exit();
                     }));
                     dialog.Commands.Add(new UICommand("Cancel", null));

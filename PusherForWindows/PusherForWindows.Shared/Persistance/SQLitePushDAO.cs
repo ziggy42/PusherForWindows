@@ -5,27 +5,27 @@ using System.Threading.Tasks;
 
 namespace PusherForWindows.Persistance
 {
-    public class PushDAOImpl : PushDAO
+    public class SQLitePushDAO : PushDAO
     {
         private static readonly string DB_NAME = "DBPush";
         private SQLiteAsyncConnection conn;
 
-        private static PushDAOImpl pushDAOImpl;
+        private static SQLitePushDAO pushDAOImpl;
 
-        public static PushDAOImpl GetInstance()
+        public static SQLitePushDAO GetInstance()
         {
             if (pushDAOImpl == null)
             {
-                pushDAOImpl = new PushDAOImpl();
-                pushDAOImpl.InitializeAsync();
+                pushDAOImpl = new SQLitePushDAO();
             }
 
             return pushDAOImpl;
         }
 
-        private PushDAOImpl()
+        private SQLitePushDAO()
         {
             this.conn = new SQLiteAsyncConnection(DB_NAME);
+            InitializeAsync();
         }
 
         private async void InitializeAsync()

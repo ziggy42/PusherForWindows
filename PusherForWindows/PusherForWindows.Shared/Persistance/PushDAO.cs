@@ -8,8 +8,6 @@ namespace PusherForWindows.Persistance
 {
     public interface PushDAO
     {
-        void InitializeAsync();
-
         void DropTableAsync();
 
         void InsertPushAsync(Push push);

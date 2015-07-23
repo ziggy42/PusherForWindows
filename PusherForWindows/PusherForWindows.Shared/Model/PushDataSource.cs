@@ -40,7 +40,7 @@ namespace PusherForWindows.Model
 
         public async void Populate()
         {
-            var newPushes = new ObservableCollection<Push>(await PushDAOImpl.GetInstance().GetAllPushesAsync());
+            var newPushes = new ObservableCollection<Push>(await DAOFactory.GetPushDAO().GetAllPushesAsync());
             foreach (var p in newPushes)
             {
                 this.InserFirst(p);
