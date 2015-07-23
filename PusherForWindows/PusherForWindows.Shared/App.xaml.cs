@@ -17,8 +17,6 @@ namespace PusherForWindows
 
         public PushbulletStream Stream { get; private set; }
 
-        public PushDAO Database { get; private set; }
-
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
@@ -27,9 +25,6 @@ namespace PusherForWindows
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-
-            this.Database = new PushDAOImpl();
-            this.Database.InitializeAsync();
 
             this.Stream = new PushbulletStream();
 
@@ -111,7 +106,7 @@ namespace PusherForWindows
                     dialog.Commands.Add(new UICommand("Logout", (command) =>
                     {
                         Pushbullet.ClearPreferences();
-                        Database.DropTableAsync();
+                        PushDAOImpl.GetInstance().DropTableAsync();
                         App.Current.Exit();
                     }));
                     dialog.Commands.Add(new UICommand("Cancel", null));

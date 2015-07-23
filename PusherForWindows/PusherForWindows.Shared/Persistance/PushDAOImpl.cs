@@ -10,12 +10,25 @@ namespace PusherForWindows.Persistance
         private static readonly string DB_NAME = "DBPush";
         private SQLiteAsyncConnection conn;
 
-        public PushDAOImpl()
+        private static PushDAOImpl pushDAOImpl;
+
+        public static PushDAOImpl GetInstance()
+        {
+            if (pushDAOImpl == null)
+            {
+                pushDAOImpl = new PushDAOImpl();
+                pushDAOImpl.InitializeAsync();
+            }
+
+            return pushDAOImpl;
+        }
+
+        private PushDAOImpl()
         {
             this.conn = new SQLiteAsyncConnection(DB_NAME);
         }
 
-        public async void InitializeAsync()
+        private async void InitializeAsync()
         {
             await this.conn.CreateTableAsync<PushDTO>();
         }

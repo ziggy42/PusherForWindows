@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using PusherForWindows.Pusher;
-using Windows.UI.Xaml;
 using Windows.Networking.Connectivity;
+using PusherForWindows.Persistance;
 
 namespace PusherForWindows.Model
 {
@@ -40,7 +40,7 @@ namespace PusherForWindows.Model
 
         public async void Populate()
         {
-            var newPushes = new ObservableCollection<Push>(await ((App)Application.Current).Database.GetAllPushesAsync());
+            var newPushes = new ObservableCollection<Push>(await PushDAOImpl.GetInstance().GetAllPushesAsync());
             foreach (var p in newPushes)
             {
                 this.InserFirst(p);

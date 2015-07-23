@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
 using PusherForWindows.Model;
-using Windows.UI.Xaml;
 using Windows.Foundation.Collections;
+using PusherForWindows.Persistance;
 
 namespace PusherForWindows.Pusher
 {
@@ -116,7 +116,7 @@ namespace PusherForWindows.Pusher
                         break;
                 }
 
-                ((App)Application.Current).Database.InsertPushAsync(currentPush);
+                PushDAOImpl.GetInstance().InsertPushAsync(currentPush); 
                 return currentPush;
             }
 
@@ -184,7 +184,7 @@ namespace PusherForWindows.Pusher
                     dynamic push = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
                     var currentPush = new PushFile((string)push.iden, (string)push.title, (string)push.body, (long)push.created,
                         (long)push.modified, (string)push.file_name, (string)push.file_type, (string)push.file_url);
-                    ((App)Application.Current).Database.InsertPushAsync(currentPush);
+                    PushDAOImpl.GetInstance().InsertPushAsync(currentPush);
                     return currentPush;
                 }
             }
@@ -271,7 +271,7 @@ namespace PusherForWindows.Pusher
                                 break;
                         }
                         pushes.Add(currentPush);
-                        ((App)Application.Current).Database.InsertPushAsync(currentPush);
+                        PushDAOImpl.GetInstance().InsertPushAsync(currentPush);
                     }
                 }
 
@@ -315,12 +315,13 @@ namespace PusherForWindows.Pusher
                                     (string)push.file_url);
                                 break;
                         }
-                        ((App)Application.Current).Database.UpdatePushAsync(currentPush);
+
+                        PushDAOImpl.GetInstance().UpdatePushAsync(currentPush);
                     }
                     else
                     {
                         currentPush = new Push((string)push.iden, (long)push.created, (long)push.modified, false);
-                        ((App)Application.Current).Database.DeletePushAsync(currentPush);
+                        PushDAOImpl.GetInstance().DeletePushAsync(currentPush);
                     }
 
                     pushes.Add(currentPush);
@@ -338,7 +339,7 @@ namespace PusherForWindows.Pusher
             var response = await Client.DeleteAsync("https://api.pushbullet.com/v2/pushes/" + push.Iden);
 
             if (response.IsSuccessStatusCode)
-                ((App)Application.Current).Database.DeletePushAsync(push);
+                PushDAOImpl.GetInstance().DeletePushAsync(push);
 
             return response.IsSuccessStatusCode;
         }
