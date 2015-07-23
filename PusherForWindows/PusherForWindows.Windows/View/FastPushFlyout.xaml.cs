@@ -10,6 +10,7 @@ using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.Resources;
 
 namespace PusherForWindows
 {
@@ -31,6 +32,7 @@ namespace PusherForWindows
 
             if (title.Length > 0 || body.Length > 0 || this.file != null)
             {
+                var loader = new ResourceLoader();
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 {
@@ -47,7 +49,7 @@ namespace PusherForWindows
                         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
 
                         XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-                        toastTextElements[0].AppendChild(toastXml.CreateTextNode("Push Sent!"));
+                        toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("PushSent")));
                         toastTextElements[1].AppendChild(toastXml.CreateTextNode(body));
 
                         ToastNotification toast = new ToastNotification(toastXml);
@@ -60,16 +62,14 @@ namespace PusherForWindows
                     }
                     else
                     {
-                        var messageDialog = new Windows.UI.Popups.MessageDialog(
-                            "Something wrong happened here but I don't know anything more...");
+                        var messageDialog = new Windows.UI.Popups.MessageDialog(loader.GetString("IDKError"));
                         messageDialog.DefaultCommandIndex = 1;
                         await messageDialog.ShowAsync();
                     }
                 }
                 else
                 {
-                    var messageDialog = new Windows.UI.Popups.MessageDialog(
-                        "Seems that internet is not available. Check your connection!");
+                    var messageDialog = new Windows.UI.Popups.MessageDialog(loader.GetString("NoInternetError"));
                     messageDialog.DefaultCommandIndex = 1;
                     await messageDialog.ShowAsync();
                 }

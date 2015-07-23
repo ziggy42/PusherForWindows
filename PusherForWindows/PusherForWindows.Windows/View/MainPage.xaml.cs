@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.System;
+using Windows.ApplicationModel.Resources;
 
 namespace PusherForWindows
 {
@@ -46,8 +47,9 @@ namespace PusherForWindows
 
         private async void CreateLoginDialogAsync()
         {
-            var dialog = new CoreWindowDialog("Welcome to Pusher");
-            dialog.Commands.Add(new UICommand("Login with Pushbullet", this.PerformLoginAsync));
+            var loader = new ResourceLoader();
+            var dialog = new CoreWindowDialog(loader.GetString("Welcome"));
+            dialog.Commands.Add(new UICommand(loader.GetString("Login"), this.PerformLoginAsync));
             await dialog.ShowAsync();
         }
 

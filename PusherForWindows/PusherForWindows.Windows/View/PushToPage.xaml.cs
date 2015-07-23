@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Resources;
 
 namespace PusherForWindows.View
 {
@@ -78,6 +79,7 @@ namespace PusherForWindows.View
 
             if (title.Length > 0 || body.Length > 0 || this.file != null)
             {
+                var loader = new ResourceLoader();
                 if (NetworkInformation.GetInternetConnectionProfile().GetNetworkConnectivityLevel()
                     == NetworkConnectivityLevel.InternetAccess)
                 {
@@ -112,7 +114,7 @@ namespace PusherForWindows.View
                         XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
 
                         XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-                        toastTextElements[0].AppendChild(toastXml.CreateTextNode("Push Sent!"));
+                        toastTextElements[0].AppendChild(toastXml.CreateTextNode(loader.GetString("PushSent")));
                         toastTextElements[1].AppendChild(toastXml.CreateTextNode(body));
 
                         ToastNotification toast = new ToastNotification(toastXml);
@@ -125,8 +127,7 @@ namespace PusherForWindows.View
                 }
                 else
                 {
-                    var messageDialog = new Windows.UI.Popups.MessageDialog(
-                        "Seems that internet is not available. Check your connection!");
+                    var messageDialog = new Windows.UI.Popups.MessageDialog(loader.GetString("NoInternetError"));
                     messageDialog.DefaultCommandIndex = 1;
                     await messageDialog.ShowAsync();
                 }

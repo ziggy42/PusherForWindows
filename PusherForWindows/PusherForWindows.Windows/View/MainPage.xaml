@@ -22,7 +22,7 @@
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Right">
                         <MenuFlyoutItem 
-                            Text="Delete" 
+                            x:Uid="Delete"
                             Tag="delete"
                             Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
@@ -43,11 +43,11 @@
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Right">
                         <MenuFlyoutItem
-                            Text="Open"
+                            x:Uid="Open"
                             Tag="openImage"
                             Click="OpenMenuFlyoutItem_Click"/>
                         <MenuFlyoutItem 
-                            Text="Delete" 
+                            x:Uid="Delete"
                             Tag="delete"
                             Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
@@ -70,11 +70,11 @@
                 <FlyoutBase.AttachedFlyout>
                     <MenuFlyout Placement="Right">
                         <MenuFlyoutItem
-                            Text="Open"
+                            x:Uid="Open"
                             Tag="openImage"
                             Click="OpenMenuFlyoutItem_Click"/>
                         <MenuFlyoutItem 
-                            Text="Delete" 
+                            x:Uid="Delete" 
                             Tag="delete"
                             Click="DeleteMenuFlyoutItem_Click"/>
                     </MenuFlyout>
@@ -133,40 +133,40 @@
 
             <StackPanel VerticalAlignment="Center" Grid.Row="2">
                 <Button
+                    x:Uid="PushTo"
                     Name="GetDeviceListButton"
                     Style="{StaticResource HoverTextButtonStyle}"
                     Padding="10, 10, 10, 10"
                     HorizontalAlignment="Stretch"
-                    Click="PushButton_Click"
-                    Content="Push-To"/>
+                    Click="PushButton_Click"/>
 
                 <Button
+                    x:Uid="FilterBy"
                     Name="FilterByButton"
                     Style="{StaticResource HoverTextButtonStyle}"
                     Padding="10, 10, 10, 10"
-                    HorizontalAlignment="Stretch"
-                    Content="Filter By" >
+                    HorizontalAlignment="Stretch" >
 
                     <Button.Flyout>
                         <MenuFlyout x:Name="FilterMenuFlyout"  Placement="Right">
                             <MenuFlyoutItem 
-                                Text="All" 
+                                x:Uid="All" 
                                 Tag="all"                                
                                 Click="FilterMenuFlyoutItem_Click"/>
                             <MenuFlyoutItem 
-                                Text="Notes" 
+                                x:Uid="Notes" 
                                 Tag="notes"
                                 Click="FilterMenuFlyoutItem_Click"/>
                             <MenuFlyoutItem 
-                                Text="Links" 
+                                x:Uid="Links" 
                                 Tag="links"
                                 Click="FilterMenuFlyoutItem_Click"/>
                             <MenuFlyoutItem 
-                                Text="Images" 
+                                x:Uid="Images" 
                                 Tag="images"
                                 Click="FilterMenuFlyoutItem_Click"/>
                             <MenuFlyoutItem 
-                                Text="Files" 
+                                x:Uid="Files" 
                                 Tag="files"
                                 Click="FilterMenuFlyoutItem_Click"/>
                         </MenuFlyout>
@@ -174,17 +174,17 @@
                 </Button>
 
                 <Button
+                    x:Uid="SearchBy"
                     Name="SearchByButton"
                     Style="{StaticResource HoverTextButtonStyle}"
                     Padding="10, 10, 10, 10"
-                    HorizontalAlignment="Stretch"
-                    Content="Search By">
+                    HorizontalAlignment="Stretch">
 
                     <Button.Flyout>
                         <Flyout>
                             <StackPanel>
                                 <TextBlock FontSize="20" Margin="0, 0, 0, 5">Insert Title</TextBlock>
-                                <TextBox Name="SearchTextBox" TextChanged="SearchTextBox_TextChanged"></TextBox>
+                                <TextBox Name="SearchTextBox" TextChanged="SearchTextBox_TextChanged"/>
                             </StackPanel>
                         </Flyout>
                     </Button.Flyout>
@@ -192,12 +192,12 @@
                 </Button>
 
                 <Button
+                    x:Uid="Refresh"
                     Name="RefreshButton"
                     Style="{StaticResource HoverTextButtonStyle}" 
                     Padding="10, 10, 10, 10" 
                     HorizontalAlignment="Stretch"
-                    Click="RefreshButton_Click"
-                    Content="Refresh" />
+                    Click="RefreshButton_Click" />
             </StackPanel>
         </Grid>
 

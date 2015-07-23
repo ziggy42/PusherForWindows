@@ -8,6 +8,7 @@ using Windows.UI.ApplicationSettings;
 using PusherForWindows.View;
 using Windows.UI.Popups;
 using PusherForWindows.Persistance;
+using Windows.ApplicationModel.Resources;
 
 
 namespace PusherForWindows
@@ -91,25 +92,25 @@ namespace PusherForWindows
 
         private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
-
+            var loader = new ResourceLoader();
             args.Request.ApplicationCommands.Add(new SettingsCommand(
-                "Mirroring Notifications", "Mirroring Notifications", (handler) =>
+                loader.GetString("MirroringNotifications"), loader.GetString("MirroringNotifications"), (handler) =>
                 {
                     PreferencesFlyout preferencesFlyout = new PreferencesFlyout();
                     preferencesFlyout.Show();
                 }));
 
             args.Request.ApplicationCommands.Add(new SettingsCommand(
-                "Logout", "Logout", async (handler) =>
+                "Logout", loader.GetString("Logout"), async (handler) =>
                 {
-                    var dialog = new MessageDialog("Are you sure you want to logout?");
-                    dialog.Commands.Add(new UICommand("Logout", (command) =>
+                    var dialog = new MessageDialog(loader.GetString("LogoutMessage"));
+                    dialog.Commands.Add(new UICommand(loader.GetString("Logout"), (command) =>
                     {
                         Pushbullet.ClearPreferences();
-                        SQLitePushDAO.GetInstance().DropTableAsync();
+                        DAOFactory.GetPushDAO().DropTableAsync();
                         App.Current.Exit();
                     }));
-                    dialog.Commands.Add(new UICommand("Cancel", null));
+                    dialog.Commands.Add(new UICommand(loader.GetString("Cancel"), null));
                     var asyncOperation = await dialog.ShowAsync();
                 }));
         }

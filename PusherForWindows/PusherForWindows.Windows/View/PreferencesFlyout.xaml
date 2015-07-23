@@ -14,13 +14,8 @@
 
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
 
-            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,25" TextWrapping="Wrap">
-                <TextBlock.Text>
-                    This option enables you to receive real time notifications from other devices connected with PushBullet.
-                </TextBlock.Text>
-            </TextBlock>
-
-            <CheckBox Name="MirroringCheckBox" IsChecked="{Binding IsMirroringEnabled}" Checked="MirroringCheckBox_Checked" Unchecked="MirroringCheckBox_Unchecked">Enable Mirroring Notifications</CheckBox>
+            <TextBlock x:Uid="StreamExplanation" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,25" TextWrapping="Wrap"/>
+            <CheckBox x:Uid="EnableStream" Name="MirroringCheckBox" IsChecked="{Binding IsMirroringEnabled}" Checked="MirroringCheckBox_Checked" Unchecked="MirroringCheckBox_Unchecked"/>
 
         </StackPanel>
 

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PusherForWindows</RootNamespace>
     <AssemblyName>PusherForWindows.Windows</AssemblyName>
-    <DefaultLanguage>it-IT</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -126,6 +126,7 @@
     </AppxManifest>
     <None Include="packages.config" />
     <None Include="PusherForWindows.Windows_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-100.png" />

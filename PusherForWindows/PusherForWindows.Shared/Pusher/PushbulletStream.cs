@@ -30,7 +30,7 @@ namespace PusherForWindows.Pusher
             catch (Exception ex)
             {
                 WebErrorStatus status = WebSocketError.GetStatus(ex.GetBaseException().HResult);
-                System.Diagnostics.Debug.WriteLine("Eccezzione in Connect: " + status.ToString());
+                System.Diagnostics.Debug.WriteLine(status.ToString());
             }
         }
 
@@ -71,7 +71,7 @@ namespace PusherForWindows.Pusher
             catch (Exception ex)
             {
                 WebErrorStatus status = WebSocketError.GetStatus(ex.GetBaseException().HResult);
-                System.Diagnostics.Debug.WriteLine("MessageReceived Exception: " + status.ToString());
+                System.Diagnostics.Debug.WriteLine(status.ToString());
             }
         }
     }
