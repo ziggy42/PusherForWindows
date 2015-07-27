@@ -3,7 +3,7 @@
   <Identity Name="041a19d8-ebe8-4163-a8a6-4eb34b5b8ec7" Publisher="CN=andrea" Version="1.0.0.0" />
   <Properties>
     <DisplayName>PusherForWindows.Windows</DisplayName>
-    <PublisherDisplayName>andrea</PublisherDisplayName>
+    <PublisherDisplayName>Buttieri, Michelini, Pivetta</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>

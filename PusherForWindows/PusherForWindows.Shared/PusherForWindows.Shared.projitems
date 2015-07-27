@@ -24,8 +24,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\PushTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Persistance\DAOFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDAO.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Persistance\SQLitePushDAO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Persistance\PushDTO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Persistance\SQLitePushDAO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\Pushbullet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Pusher\PushbulletStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils.cs" />

@@ -16,6 +16,10 @@ namespace PusherForWindows
                     return "application/x-visio";
                 case ".zip":
                     return "application/zip";
+                case ".png":
+                    return "image/png";
+                case ".jpg":
+                    return "image/jpg";
                 // MORE
                 default:
                     return "application/octet-stream";

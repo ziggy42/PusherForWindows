@@ -101,7 +101,7 @@ namespace PusherForWindows
                 }));
 
             args.Request.ApplicationCommands.Add(new SettingsCommand(
-                "Logout", loader.GetString("Logout"), async (handler) =>
+                loader.GetString("Logout"), loader.GetString("Logout"), async (handler) =>
                 {
                     var dialog = new MessageDialog(loader.GetString("LogoutMessage"));
                     dialog.Commands.Add(new UICommand(loader.GetString("Logout"), (command) =>
